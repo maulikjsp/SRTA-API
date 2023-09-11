@@ -18,13 +18,7 @@ const pool = new Pool({
   ssl: true,
 });
 
-app.use(
-  cors({
-    origin: "https://srta-gamma.vercel.app", // Replace with your Vercel app URL
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true, // If your API supports credentials (cookies, authorization)
-  })
-);
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

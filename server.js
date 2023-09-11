@@ -206,7 +206,7 @@ app.get("/api/test", async (req, res) => {
 
 // Add other routes here
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

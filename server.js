@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const { tokenVerification } = require("./middleware");
+const routes = require("./routes");
 
 const app = express();
 
@@ -30,6 +31,9 @@ const userRoles = [
   "manager",
   "investigator",
 ];
+
+// * Api routes
+app.use("/api", routes);
 
 app.post("/api/register", async (req, res) => {
   const { name, email, username, phone, password, role } = req.body;

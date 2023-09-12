@@ -4,6 +4,7 @@ const { Pool } = require("pg");
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
+const { tokenVerification } = require("./middleware");
 
 const app = express();
 
@@ -114,8 +115,8 @@ app.post("/api/login", async (req, res) => {
     // Generate a JWT token
     const token = jwt.sign(
       { id: user.id, role: user.role_id },
-      "unique", // Replace with your secret key
-      { expiresIn: "1h" }
+      "super-secret-6FDFBB8F-2909-4565-85EA-3F685784355E", // Replace with your secret key
+      { expiresIn: "24h" }
     );
 
     // Get the role name based on the role_id from the "roles" table
@@ -135,7 +136,7 @@ app.post("/api/login", async (req, res) => {
       "Access-Control-Allow-Headers",
       "Content-Type, Authorization"
     );
-
+    console.log("user logged in ");
     return res.status(200).json({
       message: "Login successful",
       accessToken: token,
@@ -150,7 +151,7 @@ app.post("/api/login", async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
-app.get("/api/get-users", async (req, res) => {
+app.get("/api/get-users", tokenVerification, async (req, res) => {
   try {
     const userQuery = await pool.query(
       "SELECT u.id, u.name, u.username, u.email, u.phone, r.role_name FROM users u INNER JOIN roles r ON u.role_id = r.role_id"
@@ -175,7 +176,7 @@ app.get("/api/get-users", async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 });
-app.get("/api/test", async (req, res) => {
+app.get("/api/test", tokenVerification, async (req, res) => {
   try {
     // Simulate some server logic
     // You can replace this with your actual logic

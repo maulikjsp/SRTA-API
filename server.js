@@ -104,7 +104,7 @@ app.post("/api/login", async (req, res) => {
     ]);
 
     if (userQuery.rows.length === 0) {
-      return res.status(401).json({ message: req.body });
+      return res.status(401).json({ message: "User not Exist" });
     }
 
     const user = userQuery.rows[0];

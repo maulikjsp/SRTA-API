@@ -4,12 +4,11 @@ const bcrypt = require("bcrypt");
 const createUser = async (req, res) => {
   const userRoles = ["admin", "evaluator", "assistant", "manager", "investigator"];
 
-  const { firstname, lastname, email, username, phone, password, role } = req.body;
+  const { firstname, lastname, email, username, phone, role } = req.body;
   if (
     !firstname ||
     !lastname ||
     !email ||
-    !password ||
     !username ||
     !phone ||
     !userRoles.includes(role.toLowerCase())
@@ -30,7 +29,7 @@ const createUser = async (req, res) => {
 
     const roleId = roleQuery.rows[0].role_id;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash("test123", 10);
 
     await pool.query(
       "INSERT INTO users (role_id, name, email, username, phone, password) VALUES ($1, $2, $3, $4, $5, $6)",

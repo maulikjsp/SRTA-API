@@ -5,7 +5,10 @@ const getRoles = require("./get-roles");
 const getExams = require("./get-exams");
 const createPermission = require("./create-permission");
 const createExam = require("./create-exams");
+const deleteExam = require("./delete-exam");
 const createUser = require("./create-user");
+const updateUser = require("./update-user");
+const deleteUser = require("./delete-user");
 const { tokenVerification } = require("../../middleware");
 
 // Routes
@@ -15,5 +18,8 @@ router.get("/get-exams", tokenVerification, getExams);
 router.post("/create-permission", tokenVerification, createPermission);
 router.post("/create-exam", tokenVerification, createExam);
 router.post("/create-user", tokenVerification, createUser);
+router.delete("/delete-user/:userId", tokenVerification, deleteUser);
+router.put("/update-user/:userId", tokenVerification, updateUser);
+router.delete("/delete-exam/:examcode", tokenVerification, deleteExam);
 
 module.exports = router;

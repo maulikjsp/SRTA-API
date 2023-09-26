@@ -2,8 +2,8 @@ const { pool } = require("../../config/db");
 
 const deleteExam = async (req, res) => {
   try {
-    const examcode = parseInt(req.params.examcode);
-    await pool.query(`DELETE FROM exams WHERE examcode=${examcode}`);
+    const examcode = req.params.examcode;
+    await pool.query(`DELETE FROM exams WHERE examcode='${examcode}'`);
     return res.status(201).json({ message: "Exam deleted successfully" });
   } catch (error) {
     console.log(error, "error");

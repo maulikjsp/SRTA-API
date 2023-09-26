@@ -16,9 +16,9 @@ const updateUser = async (req, res) => {
     // Check if the user with the given ID exists
     const userExists = await pool.query("SELECT * FROM users WHERE id = $1", [userId]);
 
-    // if (userExists.rows.length === 0) {
-    //   return res.status(404).json({ message: "User not found" });
-    // }
+    if (userExists.rows.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     // Validate and process the user role, similar to the createUser function
     // if (!roles.includes(role?.toLowerCase())) {

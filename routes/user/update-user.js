@@ -27,9 +27,9 @@ const updateUser = async (req, res) => {
 
     const roleQuery = await pool.query("SELECT role_id FROM roles WHERE role_name = $1", [role]);
 
-    if (roleQuery.rows.length === 0) {
-      return res.status(400).json({ message: "Invalid role" });
-    }
+    // if (roleQuery.rows.length === 0) {
+    //   return res.status(400).json({ message: "Invalid role" });
+    // }
 
     const roleId = roleQuery.rows[0].role_id;
     const updatedAt = new Date();

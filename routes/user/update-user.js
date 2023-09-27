@@ -10,9 +10,9 @@ const updateUser = async (req, res) => {
     const { firstname, lastname, email, phone, role, username } = req.body;
 
     // Check if the user ID is provided in the request params
-    // if (!userId) {
-    //   return res.status(400).json({ message: "User ID is required" });
-    // }
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
     // Check if the user with the given ID exists
     const userExists = await pool.query("SELECT * FROM users WHERE id = $1", [userId]);
 
@@ -21,15 +21,15 @@ const updateUser = async (req, res) => {
     }
 
     // Validate and process the user role, similar to the createUser function
-    // if (!roles.includes(role?.toLowerCase())) {
-    //   return res.status(400).json({ message: "Invalid role" });
-    // }
+    if (!roles.includes(role?.toLowerCase())) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
 
     const roleQuery = await pool.query("SELECT role_id FROM roles WHERE role_name = $1", [role]);
 
-    // if (roleQuery.rows.length === 0) {
-    //   return res.status(400).json({ message: "Invalid role" });
-    // }
+    if (roleQuery.rows.length === 0) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
 
     const roleId = roleQuery.rows[0].role_id;
     const updatedAt = new Date();

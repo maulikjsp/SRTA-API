@@ -9,6 +9,7 @@ const deleteExam = require("./delete-exam");
 const createUser = require("./create-user");
 const updateUser = require("./update-user");
 const deleteUser = require("./delete-user");
+const deletePermission = require("./delete-permission");
 const { tokenVerification } = require("../../middleware");
 
 // Routes
@@ -21,5 +22,6 @@ router.post("/create-user", tokenVerification, createUser);
 router.delete("/delete-user/:userId", tokenVerification, deleteUser);
 router.put("/update-user/:userId", tokenVerification, updateUser);
 router.delete("/delete-exam/:examcode", tokenVerification, deleteExam);
+router.delete("/delete-permission/:permissionId", tokenVerification, deletePermission);
 
 module.exports = router;

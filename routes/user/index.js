@@ -8,6 +8,7 @@ const createExam = require("./create-exams");
 const deleteExam = require("./delete-exam");
 const createUser = require("./create-user");
 const updateUser = require("./update-user");
+const updatePermission = require("./update-permission");
 const deleteUser = require("./delete-user");
 const deletePermission = require("./delete-permission");
 const { tokenVerification } = require("../../middleware");
@@ -21,6 +22,7 @@ router.post("/create-exam", tokenVerification, createExam);
 router.post("/create-user", tokenVerification, createUser);
 router.delete("/delete-user/:userId", tokenVerification, deleteUser);
 router.put("/update-user/:userId", tokenVerification, updateUser);
+router.put("/update-permission/:permissionId", tokenVerification, updatePermission);
 router.delete("/delete-exam/:examcode", tokenVerification, deleteExam);
 router.delete("/delete-permission/:permissionId", tokenVerification, deletePermission);
 

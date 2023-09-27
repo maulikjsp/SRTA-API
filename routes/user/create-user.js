@@ -2,9 +2,12 @@ const { pool } = require("../../config/db");
 const bcrypt = require("bcrypt");
 
 const createUser = async (req, res) => {
-  const userRoles = ["admin", "evaluator", "assistant", "manager", "investigator"];
+  const rolesQuery = await pool.query("SELECT * FROM roles");
+  const userRoles = rolesQuery.rows?.map((item) => item?.role_name);
+  console.log("userRoles", userRoles);
+  // const userRoles = ["admin", "evaluator", "assistant", "manager", "investigator"];
 
-    const { firstname, lastname, email, username, phone, role, password } = req.body;
+  const { firstname, lastname, email, username, phone, role, password } = req.body;
   if (!firstname) {
     return res.status(400).json({ message: "First name is required" });
   }

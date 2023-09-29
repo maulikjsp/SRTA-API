@@ -12,7 +12,9 @@ const updateRole = async (req, res) => {
     if (permissions === "") {
       return res.status(404).json({ message: "Role permissions not empty" });
     }
-    await pool.query(`UPDATE roles SET permissions = ${permissions} WHERE role_id = ${roleId}`);
+    // Update role permissions with a parameterized query
+    await pool.query("UPDATE roles SET permissions = $1 WHERE role_id = $2", [permissions, roleId]);
+    return res.status(201).json({ message: "role updated successfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server error" });

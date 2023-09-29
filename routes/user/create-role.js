@@ -17,7 +17,7 @@ const createRole = async (req, res) => {
       permissions,
     ]);
 
-    return res.status(201).json({ message: "user updated successfully" });
+    return res.status(201).json({ message: "role added successfully" });
   } catch (error) {
     console.log(error, "error");
     return res.status(500).json({ message: "Internal Server error" });

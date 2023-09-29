@@ -3,7 +3,7 @@ const { pool } = require("../../config/db");
 const updateRole = async (req, res) => {
   try {
     const { roleId } = req.params;
-    const { permissions } = req.body;
+    const { permissions, role_name } = req.body;
     const roleExists = await pool.query(`SELECT * FROM roles WHERE role_id = ${roleId}`);
 
     if (roleExists.rows.length === 0) {
@@ -13,7 +13,11 @@ const updateRole = async (req, res) => {
       return res.status(404).json({ message: "Role permissions not empty" });
     }
     // Update role permissions with a parameterized query
-    await pool.query("UPDATE roles SET permissions = $1 WHERE role_id = $2", [permissions, roleId]);
+    await pool.query("UPDATE roles SET permissions = $1, role_name = $2 WHERE role_id = $3", [
+      permissions,
+      role_name,
+      roleId,
+    ]);
     return res.status(201).json({ message: "role updated successfully" });
   } catch (error) {
     console.log(error);

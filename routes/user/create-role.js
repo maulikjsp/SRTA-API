@@ -11,8 +11,11 @@ const createRole = async (req, res) => {
     }
 
     // create role
-    await pool.query(`INSERT INTO roles (role_name, created_at, permissions)
-    VALUES ('${role_name}', '${createdAt}', '${permissions}')`);
+    await pool.query("INSERT INTO roles (role_name, created_at, permissions) VALUES ($1, $2, $3)", [
+      role_name,
+      createdAt,
+      permissions,
+    ]);
 
     return res.status(201).json({ message: "user updated successfully" });
   } catch (error) {
@@ -21,4 +24,4 @@ const createRole = async (req, res) => {
   }
 };
 
-module.exports = createRole
+module.exports = createRole;

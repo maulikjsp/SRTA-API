@@ -10,9 +10,7 @@ function validateData(data) {
     !data.facility_name ||
     !data.state ||
     !data.zip ||
-    !data.address ||
-    !data.created_at ||
-    !data.updated_at
+    !data.address
   ) {
     return false;
   }
@@ -31,9 +29,10 @@ const createExam = async (req, res) => {
       state,
       zip,
       address,
-      created_at,
-      updated_at,
     } = req.body;
+
+    const created_at = new Date();
+    const updated_at = new Date();
 
     // Validate data before insertion
     if (!validateData(req.body)) {

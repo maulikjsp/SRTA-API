@@ -10,7 +10,7 @@ const tokenVerification = (req, res, next) => {
   }
   jwt.verify(token, "super-secret-6FDFBB8F-2909-4565-85EA-3F685784355E", async (err, user) => {
     if (err) {
-      return res.status(400).send({
+      return res.status(401).send({
         status: 401,
         message: "Token Unauthorized!",
         errorMessage: err.message,

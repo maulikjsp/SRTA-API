@@ -9,6 +9,9 @@ const createRole = async (req, res) => {
     if (roleExists.rows.length > 0) {
       return res.status(400).json({ message: "role already exists" });
     }
+    if (role_name === "") {
+      return res.status(400).json({ message: "role name not empty" });
+    }
 
     // create role
     await pool.query("INSERT INTO roles (role_name, created_at, permissions) VALUES ($1, $2, $3)", [

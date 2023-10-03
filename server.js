@@ -11,9 +11,7 @@ const app = express();
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER || "maulikd",
-  host:
-    process.env.POSTGRES_HOST ||
-    "ep-aged-darkness-00061604.us-east-2.aws.neon.tech",
+  host: process.env.POSTGRES_HOST || "ep-aged-darkness-00061604.us-east-2.aws.neon.tech",
   database: process.env.POSTGRES_DATABASE || "SRTA",
   password: process.env.POSTGRES_PASSWORD || "c0J7mahetQHw",
   port: process.env.POSTGRES_PORT || 5432,
@@ -24,13 +22,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const userRoles = [
-  "admin",
-  "evaluator",
-  "assistant",
-  "manager",
-  "investigator",
-];
+const userRoles = ["admin", "evaluator", "assistant", "manager", "investigator"];
 
 // * Api routes
 app.use("/api", routes);
@@ -49,21 +41,13 @@ app.post("/api/register", async (req, res) => {
   }
 
   try {
-    const userExists = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
-      [email]
-    );
+    const userExists = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
 
     if (userExists.rows.length > 0) {
-      return res
-        .status(400)
-        .json({ message: "User with this email already exists" });
+      return res.status(400).json({ message: "User with this email already exists" });
     }
 
-    const roleQuery = await pool.query(
-      "SELECT role_id FROM roles WHERE role_name = $1",
-      [role]
-    );
+    const roleQuery = await pool.query("SELECT role_id FROM roles WHERE role_name = $1", [role]);
 
     if (roleQuery.rows.length === 0) {
       return res.status(400).json({ message: "Invalid role" });
@@ -79,14 +63,8 @@ app.post("/api/register", async (req, res) => {
     );
 
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, OPTIONS, PUT, DELETE"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Error registering user:", error);
@@ -99,9 +77,7 @@ app.post("/api/login", async (req, res) => {
 
   try {
     // Find the user by email in the "users" table
-    const userQuery = await pool.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
+    const userQuery = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
 
     if (userQuery.rows.length === 0) {
       return res.status(401).json({ message: "User not Exist" });
@@ -124,22 +100,15 @@ app.post("/api/login", async (req, res) => {
     );
 
     // Get the role name based on the role_id from the "roles" table
-    const roleQuery = await pool.query(
-      "SELECT role_name FROM roles WHERE role_id = $1",
-      [user?.role_id]
-    );
+    const roleQuery = await pool.query("SELECT role_name FROM roles WHERE role_id = $1", [
+      user?.role_id,
+    ]);
     const userRole = roleQuery.rows[0].role_name;
 
     // Add response headers
     res.setHeader("Access-Control-Allow-Origin", "*"); // Replace '*' with your allowed origins
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, OPTIONS, PUT, DELETE"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     console.log("user logged in ");
     return res.status(200).json({
       message: "Login successful",
@@ -158,20 +127,14 @@ app.post("/api/login", async (req, res) => {
 app.get("/api/get-users", tokenVerification, async (req, res) => {
   try {
     const userQuery = await pool.query(
-      "SELECT u.id, u.name, u.username, u.email, u.phone, r.role_name FROM users u INNER JOIN roles r ON u.role_id = r.role_id"
+      "SELECT u.id, u.name, u.username, u.email, u.phone, r.role_name, u.role_id FROM users u INNER JOIN roles r ON u.role_id = r.role_id"
     );
     // Get the role name based on the role_id from the "roles" table
     const users = userQuery.rows;
     // Add response headers
     res.setHeader("Access-Control-Allow-Origin", "*"); // Replace '*' with your allowed origins
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, OPTIONS, PUT, DELETE"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     return res.status(200).json({
       users: users,
     });
@@ -187,14 +150,8 @@ app.get("/api/test", tokenVerification, async (req, res) => {
     const responseData = { message: "hello from server" };
     // Add response headers
     res.setHeader("Access-Control-Allow-Origin", "*"); // Replace '*' with your allowed origins
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, OPTIONS, PUT, DELETE"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
     return res.status(200).json(responseData);
   } catch (error) {

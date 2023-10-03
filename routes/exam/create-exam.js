@@ -51,8 +51,25 @@ const createExam = async (req, res) => {
       });
     }
 
-    await pool.query(`INSERT INTO exams (examname, examcode, start_date, end_date, active, type, facility_name, state, zip, address, created_at, updated_at)
-      VALUES ('${examname}', '${examcode}', '${start_date}', '${end_date}', '${active}', '${type}', '${facility_name}', '${state}', '${zip}', '${address}', '${created_at}', '${updated_at}')`);
+    // Use parameterized query to insert data and set time zone to UTC
+    await pool.query(
+      `INSERT INTO exams (examname, examcode, start_date, end_date, active, type, facility_name, state, zip, address, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+      [
+        examname,
+        examcode,
+        start_date,
+        end_date,
+        active,
+        type,
+        facility_name,
+        state,
+        zip,  
+        address,
+        created_at,
+        updated_at,
+      ]
+    );
 
     return res.status(200).json({
       message: "Exam created successfully",

@@ -8,6 +8,6 @@ const getExams = require("./get-exams");
 
 router.post("/create-exam", tokenVerification, createExam);
 router.get("/get-exams", tokenVerification, getExams);
-router.delete("/delete-exam", tokenVerification, deleteExam);
+router.delete("/delete-exam/:examcode", tokenVerification, deleteExam);
 
 module.exports = router;

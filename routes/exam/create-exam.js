@@ -20,13 +20,13 @@ const createExam = async (req, res) => {
   try {
     const { selectedRow, roledata } = req.body;
     const {
-      examname,
+      SiteCode,
       examcode,
-      start_date,
-      end_date,
+      CreationTime,
+      ApplicationDeadline,
       active,
       type,
-      facility_name,
+      ExamFacilityId,
       state,
       zip,
       address,
@@ -43,10 +43,7 @@ const createExam = async (req, res) => {
     //  get role id from data
 
     // Check if the examname or examcode already exists
-    const checkQuery = await pool.query(
-      "SELECT * FROM exams WHERE examname = $1 OR examcode = $2",
-      [examname, examcode]
-    );
+    const checkQuery = await pool.query("SELECT * FROM exams WHERE examname = $1", [SiteCode]);
 
     if (checkQuery.rows.length > 0) {
       return res.status(400).json({
@@ -62,13 +59,13 @@ const createExam = async (req, res) => {
         `INSERT INTO exams (examname, examcode, start_date, end_date, active, type, facility_name, state, zip, address, created_at, updated_at, ext_exam_id)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING id`, // Added RETURNING id to get the inserted ID
         [
-          examcode,
-          examcode,
-          start_date,
-          end_date,
+          SiteCode,
+          SiteCode,
+          CreationTime,
+          ApplicationDeadline,
           active,
           type,
-          facility_name,
+          ExamFacilityId,
           state,
           zip,
           address,

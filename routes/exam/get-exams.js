@@ -3,8 +3,7 @@ const { pool, poolUat } = require("../../config/db");
 const getExamData = async (req, res) => {
   try {
     const examDataQuery = await poolUat.query(`SELECT 
-    "Exams"."SiteCode", 
-    "Exams"."id",
+    "Exams"."SiteCode",
     "Exams"."EventDate", 
     "Exams"."ApplicationDeadline", 
     "Exams"."IsClosedSite", 

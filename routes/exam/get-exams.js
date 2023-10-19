@@ -4,6 +4,7 @@ const getExamData = async (req, res) => {
   try {
     const examDataQuery = await poolUat.query(`SELECT 
     "Exams"."SiteCode", 
+    "Exams"."id",
     "Exams"."EventDate", 
     "Exams"."ApplicationDeadline", 
     "Exams"."IsClosedSite", 

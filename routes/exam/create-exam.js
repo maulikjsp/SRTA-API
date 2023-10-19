@@ -22,7 +22,7 @@ const createExam = async (req, res) => {
     const {
       SiteCode,
       examcode,
-      CreationTime,
+      EventDate,
       ApplicationDeadline,
       active,
       type,
@@ -61,7 +61,7 @@ const createExam = async (req, res) => {
         [
           SiteCode,
           SiteCode,
-          CreationTime,
+          EventDate,
           ApplicationDeadline,
           active,
           type,

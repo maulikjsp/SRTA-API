@@ -10,6 +10,6 @@ const updateExam = require("./update-exam");
 router.post("/create-exam", tokenVerification, createExam);
 router.get("/get-exams", tokenVerification, getExams);
 router.put("/update-exam", tokenVerification, updateExam);
-router.delete("/delete-exam/:examcode", tokenVerification, deleteExam);
+router.delete("/delete-exam/:id", tokenVerification, deleteExam);
 
 module.exports = router;

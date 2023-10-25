@@ -4,6 +4,7 @@ const getExamData = async (req, res) => {
   try {
     const examDataQuery = await poolUat.query(`SELECT 
     "Exams"."SiteCode",
+    "Exams"."Id",
     "Exams"."EventDate", 
     "Exams"."ApplicationDeadline", 
     "Exams"."IsClosedSite", 
@@ -12,9 +13,14 @@ const getExamData = async (req, res) => {
     "ExamFacilities"."City",
     "ExamFacilities"."State",
     "ExamFacilities"."Zip",
-    "Exams"."ExamStatusId"
+    "Exams"."ExamStatusId",
+    "ExamSections"."ScheduleName",
+    "ExamSections"."ExamSectionTypeId",
+    "ExamSectionTypes"."Name"
   FROM public."Exams"
-  INNER JOIN public."ExamFacilities" ON public."Exams"."ExamFacilityId" = public."ExamFacilities"."Id";`);
+  INNER JOIN public."ExamFacilities" ON public."Exams"."ExamFacilityId" = public."ExamFacilities"."Id"
+  INNER JOIN public."ExamSections" ON public."Exams"."Id" = public."ExamSections"."ExamId"
+  INNER JOIN public."ExamSectionTypes" ON public."ExamSections"."Id" = public."ExamSections"."Id"`);
     const examData = examDataQuery.rows;
     return res.status(200).json({
       exams: examData,

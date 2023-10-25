@@ -12,7 +12,7 @@ const updateExam = async (req, res) => {
       type,
       facility_name,
       state,
-      zip,
+      zip,  
       address,
       id,
     } = selectedRow;

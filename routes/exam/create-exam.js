@@ -30,7 +30,7 @@ const createExam = async (req, res) => {
       State,
       Zip,
       Address1,
-      id,
+      Id,
     } = selectedRow;
     const created_at = new Date();
     const updated_at = new Date();
@@ -71,7 +71,7 @@ const createExam = async (req, res) => {
           Address1,
           created_at,
           updated_at,
-          id,
+          Id,
         ]
       );
 

@@ -14,7 +14,7 @@ WHERE "ExamSections"."ExamId" = $1 AND "ExamSections"."ExamDate" = $2;
     );
     const examData = examDataQuery.rows;
     return res.status(200).json({
-      exams: examData,
+      examSections: examData,
     });
   } catch (error) {
     console.log(error, "error");

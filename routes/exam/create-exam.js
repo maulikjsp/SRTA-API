@@ -112,6 +112,23 @@ const createExam = async (req, res) => {
       console.error("roledata is undefined or empty.");
     }
 
+    // Insert Exam section into exam_section table
+    if (ExamSections.length !== 0) {
+      for (let i = 0; i < ExamSections.length; i++) {
+        const query = `
+        INSERT INTO exam_section(created_at, exam_id, section_id,updated_at)
+        VALUES
+        ($1, $2, $3, $4)`;
+        const values = [created_at, createdExamId, ExamSections[i]?.Id, updated_at];
+        try {
+          await pool.query(query, values);
+        } catch (error) {
+          // Handle any errors that may occur during the database query
+          console.error(`Error inserting row ${i + 1}:`, error);
+        }
+      }
+    }
+
     return res.status(200).json({
       message: "Exam created successfully",
     });

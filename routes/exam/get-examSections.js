@@ -25,6 +25,7 @@ const getExamSections = async (req, res) => {
             "CandidateProfiles"."GraduationDate",
             "AbpUsers"."Name" AS "student_name",
             "AbpUsers"."EmailAddress",
+            "AbpUsers"."PhoneNumber",
             "Schools"."Name" AS "school"
             FROM public."CandidateExams"
             INNER JOIN public."CandidateProfiles" ON "CandidateExams"."CandidateProfileId" = "CandidateProfiles"."Id"

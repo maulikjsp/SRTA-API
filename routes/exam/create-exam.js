@@ -18,7 +18,7 @@ function validateData(data) {
 }
 const createExam = async (req, res) => {
   try {
-    const { selectedRow, roledata } = req.body;
+    const { selectedRow, roledata, ExamSections } = req.body;
     const {
       SiteCode,
       examcode,

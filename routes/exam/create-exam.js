@@ -18,7 +18,7 @@ function validateData(data) {
 }
 const createExam = async (req, res) => {
   try {
-    const { selectedRow, roledata, ExamSections } = req.body;
+    const { selectedRow, roledata, ExamSections, ExamStudents } = req.body;
     const {
       SiteCode,
       examcode,
@@ -120,6 +120,45 @@ const createExam = async (req, res) => {
         VALUES
         ($1, $2, $3, $4)`;
         const values = [created_at, createdExamId, ExamSections[i]?.Id, updated_at];
+        const sectionQuery = `
+        INSERT INTO sections(created_at, ext_section_id, title, updated_at)
+        VALUES
+        ($1, $2, $3, $4)
+        `;
+        const sectionValues = [created_at, ExamSections[i]?.Id, ExamSections[i]?.Name, updated_at];
+        try {
+          await pool.query(query, values);
+          await pool.query(sectionQuery, sectionValues);
+        } catch (error) {
+          // Handle any errors that may occur during the database query
+          console.error(`Error inserting row ${i + 1}:`, error);
+        }
+      }
+    }
+    // Insert Students into students table
+    if (ExamStudents.length !== 0) {
+      for (let i = 0; i < ExamStudents.length; i++) {
+        const query = `
+        INSERT INTO students(sequence_number, ext_student_id, exam_id, name, email, address, phone, social, school, graduation_date, created_at, updated_at, is_present, is_terminated, reason)
+        VALUES
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`;
+        const values = [
+          ExamStudents[i]?.CandidateExamSeqNum,
+          ExamStudents[i]?.UserId,
+          createdExamId,
+          ExamStudents[i]?.student_name,
+          ExamStudents[i]?.EmailAddress,
+          ExamStudents[i]?.StreetAddress,
+          ExamStudents[i]?.phone,
+          ExamStudents[i]?.social,
+          ExamStudents[i]?.school,
+          ExamStudents[i]?.GraduationDate,
+          created_at,
+          updated_at,
+          null,
+          null,
+          "",
+        ];
         try {
           await pool.query(query, values);
         } catch (error) {
@@ -128,7 +167,6 @@ const createExam = async (req, res) => {
         }
       }
     }
-
     return res.status(200).json({
       message: "Exam created successfully",
     });

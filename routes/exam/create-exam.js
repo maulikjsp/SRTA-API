@@ -116,7 +116,7 @@ const createExam = async (req, res) => {
     if (ExamSections.length !== 0) {
       for (let i = 0; i < ExamSections.length; i++) {
         const query = `
-        INSERT INTO exam_section(created_at, exam_id, section_id,updated_at)
+        INSERT INTO exam_sections(created_at, exam_id, section_id,updated_at)
         VALUES
         ($1, $2, $3, $4)`;
         const values = [created_at, createdExamId, ExamSections[i]?.Id, updated_at];

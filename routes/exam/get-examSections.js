@@ -6,9 +6,9 @@ const getExamSections = async (req, res) => {
     const examDataQuery = await poolUat.query(
       `SELECT "ExamSections"."ScheduleName", "ExamSections"."Id", "ExamSections"."ExamSectionTypeId",
       "ExamSections"."ExamId", "ExamSectionTypes"."Name"
-FROM public."ExamSections"
-INNER JOIN public."ExamSectionTypes" ON "ExamSections"."ExamSectionTypeId" = "ExamSectionTypes"."Id"
-WHERE "ExamSections"."ExamId" = $1 AND "ExamSections"."ExamDate" = $2;
+        FROM public."ExamSections"
+        INNER JOIN public."ExamSectionTypes" ON "ExamSections"."ExamSectionTypeId" = "ExamSectionTypes"."Id"
+        WHERE "ExamSections"."ExamId" = $1 AND "ExamSections"."ExamDate" = $2;
       `,
       [id, date]
     );

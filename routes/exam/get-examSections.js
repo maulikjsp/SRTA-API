@@ -12,8 +12,34 @@ const getExamSections = async (req, res) => {
       `,
       [id, date]
     );
+
+    const examStudentsQuery = await poolUat.query(
+      `
+        SELECT 
+            "CandidateExams"."CandidateProfileId",
+            "CandidateExams"."CandidateExamSeqNum",
+            "CandidateProfiles"."UserId",
+            "CandidateProfiles"."SocialSecurity",
+            "CandidateProfiles"."StreetAddress",
+            "CandidateProfiles"."City",
+            "CandidateProfiles"."GraduationDate",
+            "AbpUsers"."Name" AS "student_name",
+            "AbpUsers"."EmailAddress",
+            "Schools"."Name" AS "school"
+            FROM public."CandidateExams"
+            INNER JOIN public."CandidateProfiles" ON "CandidateExams"."CandidateProfileId" = "CandidateProfiles"."Id"
+            INNER JOIN public."AbpUsers" ON "CandidateProfiles"."UserId" = "AbpUsers"."Id"
+            INNER JOIN public."Schools" ON "CandidateProfiles"."GraduationSchoolId" = "Schools"."Id"
+            WHERE "CandidateExams"."ExamId" = $1 
+            AND "CandidateExams"."IsDeleted" = 'f' AND "CandidateProfiles"."IsDeleted" = 'f' AND "CandidateProfiles"."IsDeleted" = 'f'
+            `,
+      [id]
+    );
     const examData = examDataQuery.rows;
+    const examStudentsData = examStudentsQuery.rows;
+
     return res.status(200).json({
+      examStudents: examStudentsData,
       examSections: examData,
     });
   } catch (error) {

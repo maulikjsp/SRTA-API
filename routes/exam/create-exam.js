@@ -126,9 +126,21 @@ const createExam = async (req, res) => {
         ($1, $2, $3, $4)
         `;
         const sectionValues = [created_at, ExamSections[i]?.Id, ExamSections[i]?.Name, updated_at];
+
         try {
           await pool.query(query, values);
-          await pool.query(sectionQuery, sectionValues);
+          const sectionData = await pool.query(sectionQuery, sectionValues);
+          const sectionId = sectionData.rows[0]?.id;
+          // add group info after section created
+          if (sectionId !== undefined) {
+            const groupQuery = `
+            INSERT INTO groups(created_at, exam_section_id, title, updated_at)
+            VALUES
+            ($1, $2, $3, $4)
+            `;
+            const value = [created_at, sectionId, ExamSections[i]?.ScheduleName, updated_at];
+            await pool.query(groupQuery, value);
+          }
         } catch (error) {
           // Handle any errors that may occur during the database query
           console.error(`Error inserting row ${i + 1}:`, error);

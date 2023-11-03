@@ -9,7 +9,26 @@ const getExams = async (req, res) => {
       const usersQuery = await pool.query('SELECT * FROM "exam_user" WHERE "exam_id" = $1', [
         item.id,
       ]);
-      item.users = usersQuery.rows;
+      const examSectionQuery = await pool.query(
+        `
+        select 
+       "sections"."title",
+       "sections"."id",
+       "groups"."title" as Group
+        from "sections"
+        inner join "exam_sections" on "exam_sections"."section_id" = "sections"."id"
+        inner join "groups" on "groups"."exam_section_id" = "sections"."id"
+        where "exam_id" = $1
+      `,
+        [item.id]
+      );
+
+      const examStudentsQuery = await pool.query('SELECT * FROM "students" WHERE "exam_id" = $1', [
+        item.id,
+      ]);
+      (item.users = usersQuery.rows),
+        (item.sections = examSectionQuery.rows),
+        (item.students = examStudentsQuery.rows);
       return item;
     });
 

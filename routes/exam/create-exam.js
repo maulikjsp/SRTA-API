@@ -164,7 +164,7 @@ const createExam = async (req, res) => {
           ExamStudents[i]?.EmailAddress,
           ExamStudents[i]?.StreetAddress,
           ExamStudents[i]?.phone,
-          ExamStudents[i]?.social,
+          ExamStudents[i]?.SocialSecurity,
           ExamStudents[i]?.school,
           ExamStudents[i]?.GraduationDate,
           created_at,

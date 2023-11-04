@@ -27,6 +27,7 @@ const updateExam = async (req, res) => {
     }
 
     try {
+      await pool.query(`delete from exam_user where exam_id = $1`, [examId]);
       // Update the exam record
       await pool.query(
         `UPDATE exams
@@ -49,71 +50,68 @@ const updateExam = async (req, res) => {
         ]
       );
 
-      function arraysAreEqual(arr1, arr2) {
-        if (arr1.length !== arr2.length) {
-          return false;
-        }
-        return arr1.every((value, index) => value === arr2[index]);
-      }
-
       // Insert Exam User into the table if exam creation was successful
       if (roleData && roleData.length && examId !== undefined) {
-        const getExamUsersQuery = `SELECT "exam_user"."user_id"
-        FROM exam_user
-        WHERE exam_id = $1`;
-        const values = [examId];
-        const getExamUsersRequest = await pool.query(getExamUsersQuery, values);
-        const getExamUsers = getExamUsersRequest.rows.map((item) => item?.user_id);
-        console.log(getExamUsers, roleData);
-        console.log(arraysAreEqual(getExamUsers, roleData));
-
         for (let i = 0; i < roleData.length; i++) {
-          const userExistsQuery = `
-            SELECT 1
-            FROM exam_user
-            WHERE exam_id = $1
-            AND user_id = $2;
-          `;
+          // If the user doesn't exist, insert a new row
+          const insertQuery = `
+           INSERT INTO exam_user (exam_id, type, updated_at, user_id, created_at)
+           VALUES ($1, $2, $3, $4, NOW());
+         `;
 
-          const userExistsValues = [examId, roleData[i]];
+          const insertValues = [examId, type, updated_at, roleData[i]];
 
-          const userExistsResult = await pool.query(userExistsQuery, userExistsValues);
-
-          if (userExistsResult.rows.length === 0) {
-            // If the user doesn't exist, insert a new row
-            const insertQuery = `
-              INSERT INTO exam_user (exam_id, type, updated_at, user_id, created_at)
-              VALUES ($1, $2, $3, $4, NOW());
-            `;
-
-            const insertValues = [examId, type, updated_at, roleData[i]];
-
-            try {
-              await pool.query(insertQuery, insertValues);
-            } catch (error) {
-              console.error(`Error inserting row ${i + 1}:`, error);
-            }
-          } else {
-            
-            // If the user exists, update the existing row
-            const updateQuery = `
-              UPDATE exam_user
-              SET
-                type = $2,
-                updated_at = $3
-              WHERE
-                exam_id = $1
-                AND user_id = $4;
-            `;
-
-            const updateValues = [examId, type, updated_at, roleData[i]];
-
-            try {
-              await pool.query(updateQuery, updateValues);
-            } catch (error) {
-              console.error(`Error updating row ${i + 1}:`, error);
-            }
+          try {
+            await pool.query(insertQuery, insertValues);
+          } catch (error) {
+            console.error(`Error inserting row ${i + 1}:`, error);
           }
+          // const userExistsQuery = `
+          //   SELECT 1
+          //   FROM exam_user
+          //   WHERE exam_id = $1
+          //   AND user_id = $2;
+          // `;
+
+          // const userExistsValues = [examId, roleData[i]];
+
+          // const userExistsResult = await pool.query(userExistsQuery, userExistsValues);
+
+          // if (userExistsResult.rows.length === 0) {
+          //   // If the user doesn't exist, insert a new row
+          //   const insertQuery = `
+          //     INSERT INTO exam_user (exam_id, type, updated_at, user_id, created_at)
+          //     VALUES ($1, $2, $3, $4, NOW());
+          //   `;
+
+          //   const insertValues = [examId, type, updated_at, roleData[i]];
+
+          //   try {
+          //     await pool.query(insertQuery, insertValues);
+          //   } catch (error) {
+          //     console.error(`Error inserting row ${i + 1}:`, error);
+          //   }
+          // } else {
+
+          //   // If the user exists, update the existing row
+          //   const updateQuery = `
+          //     UPDATE exam_user
+          //     SET
+          //       type = $2,
+          //       updated_at = $3
+          //     WHERE
+          //       exam_id = $1
+          //       AND user_id = $4;
+          //   `;
+
+          //   const updateValues = [examId, type, updated_at, roleData[i]];
+
+          //   try {
+          //     await pool.query(updateQuery, updateValues);
+          //   } catch (error) {
+          //     console.error(`Error updating row ${i + 1}:`, error);
+          //   }
+          // }
         }
       } else {
         console.error("roleData is undefined or empty.");

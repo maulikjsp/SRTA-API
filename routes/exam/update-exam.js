@@ -2,7 +2,7 @@ const { pool } = require("../../config/db");
 
 const updateExam = async (req, res) => {
   try {
-    const { selectedRow, roledata } = req.body;
+    const { selectedRow, roleData } = req.body;
     const { examcode, start_date, end_date, active, type, facility, state, zip, address, examId } =
       selectedRow;
     const updated_at = new Date(); // Update the updated_at timestamp
@@ -49,9 +49,25 @@ const updateExam = async (req, res) => {
         ]
       );
 
+      function arraysAreEqual(arr1, arr2) {
+        if (arr1.length !== arr2.length) {
+          return false;
+        }
+        return arr1.every((value, index) => value === arr2[index]);
+      }
+
       // Insert Exam User into the table if exam creation was successful
-      if (roledata && roledata.length && examId !== undefined) {
-        for (let i = 0; i < roledata.length; i++) {
+      if (roleData && roleData.length && examId !== undefined) {
+        const getExamUsersQuery = `SELECT "exam_user"."user_id"
+        FROM exam_user
+        WHERE exam_id = $1`;
+        const values = [examId];
+        const getExamUsersRequest = await pool.query(getExamUsersQuery, values);
+        const getExamUsers = getExamUsersRequest.rows.map((item) => item?.user_id);
+        console.log(getExamUsers, roleData);
+        console.log(arraysAreEqual(getExamUsers, roleData));
+
+        for (let i = 0; i < roleData.length; i++) {
           const userExistsQuery = `
             SELECT 1
             FROM exam_user
@@ -59,7 +75,7 @@ const updateExam = async (req, res) => {
             AND user_id = $2;
           `;
 
-          const userExistsValues = [examId, roledata[i]];
+          const userExistsValues = [examId, roleData[i]];
 
           const userExistsResult = await pool.query(userExistsQuery, userExistsValues);
 
@@ -70,7 +86,7 @@ const updateExam = async (req, res) => {
               VALUES ($1, $2, $3, $4, NOW());
             `;
 
-            const insertValues = [examId, type, updated_at, roledata[i]];
+            const insertValues = [examId, type, updated_at, roleData[i]];
 
             try {
               await pool.query(insertQuery, insertValues);
@@ -78,6 +94,7 @@ const updateExam = async (req, res) => {
               console.error(`Error inserting row ${i + 1}:`, error);
             }
           } else {
+            
             // If the user exists, update the existing row
             const updateQuery = `
               UPDATE exam_user
@@ -89,7 +106,7 @@ const updateExam = async (req, res) => {
                 AND user_id = $4;
             `;
 
-            const updateValues = [examId, type, updated_at, roledata[i]];
+            const updateValues = [examId, type, updated_at, roleData[i]];
 
             try {
               await pool.query(updateQuery, updateValues);
@@ -99,7 +116,7 @@ const updateExam = async (req, res) => {
           }
         }
       } else {
-        console.error("roledata is undefined or empty.");
+        console.error("roleData is undefined or empty.");
       }
 
       console.log("Exam updated successfully.");

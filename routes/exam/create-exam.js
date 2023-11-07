@@ -153,14 +153,15 @@ const createExam = async (req, res) => {
     if (ExamStudents.length !== 0) {
       for (let i = 0; i < ExamStudents.length; i++) {
         const query = `
-        INSERT INTO students(sequence_number, ext_student_id, exam_id, name, email, address, phone, social, school, graduation_date, created_at, updated_at, is_present, is_terminated, reason)
+        INSERT INTO students(sequence_number, ext_student_id, exam_id, name, surname, email, address, phone, social, school, graduation_date, created_at, updated_at, is_present, is_terminated, reason)
         VALUES
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`;
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`;
         const values = [
           ExamStudents[i]?.CandidateExamSeqNum,
           ExamStudents[i]?.UserId,
           createdExamId,
           ExamStudents[i]?.student_name,
+          ExamStudents[i]?.student_surname,
           ExamStudents[i]?.EmailAddress,
           ExamStudents[i]?.StreetAddress,
           ExamStudents[i]?.phone,

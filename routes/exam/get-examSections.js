@@ -24,6 +24,7 @@ const getExamSections = async (req, res) => {
             "CandidateProfiles"."City",
             "CandidateProfiles"."GraduationDate",
             "AbpUsers"."Name" AS "student_name",
+            "AbpUsers"."Surname" AS "student_surname",
             "AbpUsers"."EmailAddress",
             "AbpUsers"."PhoneNumber",
             "Schools"."Name" AS "school"

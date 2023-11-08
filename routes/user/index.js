@@ -13,6 +13,7 @@ const updatePermission = require("./update-permission");
 const updateRole = require("./update-role");
 const deleteUser = require("./delete-user");
 const deletePermission = require("./delete-permission");
+const getUserPermissions = require("./get-user-permissions");
 const { tokenVerification } = require("../../middleware");
 
 // Routes
@@ -27,6 +28,7 @@ router.delete("/delete-user/:userId", tokenVerification, deleteUser);
 router.put("/update-user/:userId", tokenVerification, updateUser);
 router.put("/update-permission/:permissionId", tokenVerification, updatePermission);
 router.put("/update-role/:roleId", tokenVerification, updateRole);
+router.get("/get-user-permissions", tokenVerification, getUserPermissions);
 
 router.delete("/delete-exam/:examcode", tokenVerification, deleteExam);
 router.delete("/delete-permission/:permissionId", tokenVerification, deletePermission);

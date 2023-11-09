@@ -100,10 +100,9 @@ app.post("/api/login", async (req, res) => {
     );
 
     // Get the role name based on the role_id from the "roles" table
-    const roleQuery = await pool.query(
-      "SELECT role_name, role_id, permissions FROM roles WHERE role_id = $1",
-      [user?.role_id]
-    );
+    const roleQuery = await pool.query("SELECT role_name, role_id FROM roles WHERE role_id = $1", [
+      user?.role_id,
+    ]);
     const userRole = roleQuery.rows[0];
 
     // Add response headers

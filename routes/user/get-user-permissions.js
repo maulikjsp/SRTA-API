@@ -1,7 +1,7 @@
 const { pool } = require("../../config/db");
 
 const getUserPermissions = async (req, res) => {
-  const email = req.body.email;
+  const email = req.params.email;
   try {
     const userQuery = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     const user = userQuery.rows[0];

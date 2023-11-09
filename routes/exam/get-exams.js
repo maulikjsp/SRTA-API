@@ -13,10 +13,12 @@ const getExamData = async (req, res) => {
     "ExamFacilities"."City",
     "ExamFacilities"."State",
     "ExamFacilities"."Zip" ,
-    "ExamScheduleTemplates"."Name" AS "Type"
+    "ExamScheduleTemplates"."Name" AS "Type",
+    "ExamStatuses"."Name" AS "status"
   FROM public."Exams"
   INNER JOIN public."ExamFacilities" ON public."Exams"."ExamFacilityId" = public."ExamFacilities"."Id"
   INNER JOIN public."ExamScheduleTemplates" ON public."Exams"."ExamScheduleTemplateId" = public."ExamScheduleTemplates"."Id"
+  INNER JOIN public."ExamStatuses" ON public."Exams"."ExamStatusId" = public."ExamStatuses"."Id"
   WHERE "Exams"."IsDeleted" = 'f';`);
     const examData = examDataQuery.rows;
     return res.status(200).json({

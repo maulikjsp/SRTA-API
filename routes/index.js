@@ -4,6 +4,7 @@ const { tokenVerification } = require("../middleware");
 const user = require("./user");
 const exam = require("./exam");
 const student = require("./student");
+const procedure = require("./procedure");
 const router = express.Router();
 
 // AUTH Routes * /api/auth/*
@@ -11,4 +12,5 @@ const router = express.Router();
 router.use("/user", user);
 router.use("/exam", exam);
 router.use("/student", student);
+router.use("/procedure", procedure);
 module.exports = router;

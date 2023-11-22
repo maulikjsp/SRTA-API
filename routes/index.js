@@ -5,6 +5,7 @@ const user = require("./user");
 const exam = require("./exam");
 const student = require("./student");
 const procedure = require("./procedure");
+const categories = require("./categories");
 const router = express.Router();
 
 // AUTH Routes * /api/auth/*
@@ -13,4 +14,6 @@ router.use("/user", user);
 router.use("/exam", exam);
 router.use("/student", student);
 router.use("/procedure", procedure);
+router.use("/categories", categories);
+
 module.exports = router;

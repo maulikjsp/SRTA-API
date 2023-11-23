@@ -14,6 +14,7 @@ const deleteExam = async (req, res) => {
     await pool.query(`DELETE FROM exam_user WHERE exam_id=${id}`);
     await pool.query(`DELETE FROM students WHERE exam_id=${id}`);
     await pool.query(`DELETE FROM exam_sections WHERE exam_id=${id}`);
+    await pool.query(`DELETE FROM examtypes WHERE examid=${id}`);
 
     return res.status(201).json({ message: "Exam deleted successfully" });
   } catch (error) {

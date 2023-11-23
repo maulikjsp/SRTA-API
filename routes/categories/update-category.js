@@ -5,7 +5,11 @@ const updateCategory = async (req, res) => {
     const { id, title, procedures } = req.body;
     const updated_at = new Date();
     // Check if the title is already exist
-    const checkQuery = await pool.query("SELECT * FROM categories WHERE title = $1", [title]);
+    const checkQuery = await pool.query("SELECT * FROM categories WHERE title = $1 AND id != $2", [
+      title,
+      id,
+    ]);
+
     if (checkQuery.rows.length > 0) {
       return res.status(400).json({
         message: "category already exists",

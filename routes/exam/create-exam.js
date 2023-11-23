@@ -118,6 +118,12 @@ const createExam = async (req, res) => {
     // Insert Exam section into exam_section table
     if (ExamSections.length !== 0) {
       for (let i = 0; i < ExamSections.length; i++) {
+        const checkSectionQuery = `
+      SELECT id FROM sections
+      WHERE title = $1
+    `;
+        const checkSectionValues = [ExamSections[i]?.Name];
+        const checkSectionResult = await pool.query(checkSectionQuery, checkSectionValues);
         const sectionQuery = `
         INSERT INTO sections(created_at, ext_section_id, title, updated_at)
         VALUES

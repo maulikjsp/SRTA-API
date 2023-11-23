@@ -81,6 +81,9 @@ const createExam = async (req, res) => {
 
       if (createdExamId !== undefined) {
         examCreationSuccess = true;
+        const query = `INSERT INTO examtypes (examid, type) VALUES ($1, $2)`;
+        const values = [createdExamId, type];
+        await pool.query(query, values);
         console.log("Exam created successfully.");
       } else {
         console.error("Exam creation failed.");

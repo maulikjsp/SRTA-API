@@ -11,7 +11,7 @@ const updateProcedure = async (req, res) => {
     ]);
     if (checkQuery.rows.length > 0) {
       return res.status(400).json({
-        message: "procedures already exists",
+        message: "procedures Name already exists",
       });
     }
     await pool.query(

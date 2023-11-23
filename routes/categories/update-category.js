@@ -12,7 +12,7 @@ const updateCategory = async (req, res) => {
 
     if (checkQuery.rows.length > 0) {
       return res.status(400).json({
-        message: "category already exists",
+        message: "category Name already exists",
       });
     }
     await pool.query(

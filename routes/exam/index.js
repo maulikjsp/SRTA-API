@@ -9,6 +9,7 @@ const updateExam = require("./update-exam");
 const getExamSections = require("./get-examSections");
 const getExamStudents = require("./get-examStudents");
 const getSections = require("./get-sections");
+const getExamTypes = require("./get-examtype");
 
 router.post("/create-exam", tokenVerification, createExam);
 router.get("/get-exams", tokenVerification, getExams);
@@ -17,5 +18,6 @@ router.delete("/delete-exam/:id", tokenVerification, deleteExam);
 router.get("/get-exam-section/:id/:date", tokenVerification, getExamSections);
 router.get("/get-exam-students/:id", tokenVerification, getExamStudents);
 router.get("/get-sections", tokenVerification, getSections);
+router.get("/get-examTypes", tokenVerification, getExamTypes);
 
 module.exports = router;

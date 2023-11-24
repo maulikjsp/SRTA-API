@@ -127,15 +127,19 @@ const createExam = async (req, res) => {
         const sectionQuery = `
         INSERT INTO sections(created_at, ext_section_id, title, updated_at)
         VALUES
-        ($1, $2, $3, $4) RETURNING id
+        ($1, $2, $3, $4)
         `;
         const sectionValues = [created_at, ExamSections[i]?.Id, ExamSections[i]?.Name, updated_at];
 
         try {
           let sectionId = null;
-          const sectionData = await pool.query(sectionQuery, sectionValues);
-          sectionId = sectionData.rows[0]?.id;
-          console.log(sectionData.rows[0], "sectionIdsectionId");
+          if (checkSectionResult.rows.length > 0) {
+            sectionId = checkSectionResult.rows[0]?.id;
+          } else {
+            const sectionData = await pool.query(sectionQuery, sectionValues);
+            sectionId = sectionData.rows[0]?.id;
+          }
+          // console.log(sectionData.rows[0], "sectionIdsectionId");
           // add group info after section created
           if (sectionId !== undefined) {
             const query = `

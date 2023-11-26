@@ -15,4 +15,3 @@ const getExamTypes = async (req, res) => {
 };
 
 module.exports = getExamTypes;
-questionnaires;

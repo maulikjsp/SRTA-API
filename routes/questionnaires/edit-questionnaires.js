@@ -39,24 +39,44 @@ const editQuestionnaires = async (req, res) => {
 
     if (id != undefined) {
       for (let i = 0; i < AcceptableList.length; i++) {
-        const query = `
-            UPDATE criterias 
-            SET is_acceptable = $1, title = $3 
-            WHERE id = $2
-          `;
-        const values = [
-          AcceptableList[i]["acceptable"] ? 1 : 0,
-          AcceptableList[i]["id"],
-          AcceptableList[i]["Acceptable"],
-        ];
-        try {
-          await pool.query(query, values);
-        } catch (error) {
-          // Handle any errors that may occur during the database query
-          console.error(`Error updating row ${i + 1}:`, error);
+        if (AcceptableList[i]["id"] != undefined) {
+          // If the ID exists, update the existing record
+          const query = `
+              UPDATE criterias 
+              SET is_acceptable = $1, title = $3 
+              WHERE id = $2
+            `;
+          const values = [
+            AcceptableList[i]["acceptable"] ? 1 : 0,
+            AcceptableList[i]["id"],
+            AcceptableList[i]["Acceptable"],
+          ];
+          try {
+            await pool.query(query, values);
+          } catch (error) {
+            // Handle any errors that may occur during the database query
+            console.error(`Error updating row ${i + 1}:`, error);
+          }
+        } else {
+          // If the ID does not exist, it's a new item, so insert it
+          const insertQuery = `
+              INSERT INTO criterias (is_acceptable,questionnaire_id, title) VALUES ($1, $2)
+            `;
+          const insertValues = [
+            AcceptableList[i]["acceptable"] ? 1 : 0,
+            id,
+            AcceptableList[i]["Acceptable"],
+          ];
+          try {
+            await pool.query(insertQuery, insertValues);
+          } catch (error) {
+            // Handle any errors that may occur during the database query
+            console.error(`Error inserting new row ${i + 1}:`, error);
+          }
         }
       }
     }
+
     return res.status(201).json({
       message: "Questionnaires updated successfully",
     });

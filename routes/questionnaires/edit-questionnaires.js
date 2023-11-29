@@ -60,7 +60,7 @@ const editQuestionnaires = async (req, res) => {
         } else {
           // If the ID does not exist, it's a new item, so insert it
           const insertQuery = `
-              INSERT INTO criterias (is_acceptable,questionnaire_id, title) VALUES ($1, $2, $3)
+              INSERT INTO criterias (is_acceptable, questionnaire_id, title) VALUES ($1, $2, $3)
             `;
           const insertValues = [
             AcceptableList[i]["acceptable"] ? 1 : 0,

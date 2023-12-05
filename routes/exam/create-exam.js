@@ -192,6 +192,7 @@ const createExam = async (req, res) => {
         } catch (error) {
           // Handle any errors that may occur during the database query
           console.error(`Error inserting row ${i + 1}:`, error);
+          return res.status(500).json({ message: "Server error", error: error });
         }
       }
     }

@@ -8,6 +8,6 @@ const getStudentSections = require("./getStudentSections");
 
 router.put("/edit-student", tokenVerification, updateStudent);
 router.get("/get-students", tokenVerification, getStudents);
-router.get("/get-student-sections/:id", tokenVerification, getStudentSections);
+router.get("/get-student-sections", tokenVerification, getStudentSections);
 
 module.exports = router;

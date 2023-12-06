@@ -20,7 +20,7 @@ const createExamProcedure = async (req, res) => {
 
     const assignedExaminers = assignedExaminersQuery.rows.map((row) => row.examiner_id);
 
-    let examiner_id = null;
+    let examiner_id = 1;
 
     // Find the first available and unassigned examiner
     const availableExaminer = examinerQuery.rows.find(

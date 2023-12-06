@@ -135,40 +135,28 @@ const createExam = async (req, res) => {
           let sectionId = null;
           if (checkSectionResult.rows.length > 0) {
             sectionId = checkSectionResult.rows[0]?.id;
-
-            const query = `
-          INSERT INTO exam_sections(created_at, exam_id, section_id,updated_at)
-          VALUES
-          ($1, $2, $3, $4)`;
-            const values = [created_at, createdExamId, sectionId, updated_at];
-            const groupQuery = `
-              INSERT INTO groups(created_at, exam_section_id, title, updated_at)
-              VALUES
-              ($1, $2, $3, $4)
-              `;
-            const value = [created_at, sectionId, ExamSections[i]?.ScheduleName, updated_at];
-            await pool.query(groupQuery, value);
-            await pool.query(query, values);
+            console.log("already exists section query worked");
           } else {
             const sectionData = await pool.query(sectionQuery, sectionValues);
             sectionId = sectionData.rows[0]?.id;
-
+          }
+          // console.log(sectionData.rows[0], "sectionIdsectionId");
+          // add group info after section created
+          if (sectionId !== undefined) {
             const query = `
-          INSERT INTO exam_sections(created_at, exam_id, section_id,updated_at)
-          VALUES
-          ($1, $2, $3, $4)`;
+        INSERT INTO exam_sections(created_at, exam_id, section_id,updated_at)
+        VALUES
+        ($1, $2, $3, $4)`;
             const values = [created_at, createdExamId, sectionId, updated_at];
             const groupQuery = `
-              INSERT INTO groups(created_at, exam_section_id, title, updated_at)
-              VALUES
-              ($1, $2, $3, $4)
-              `;
+            INSERT INTO groups(created_at, exam_section_id, title, updated_at)
+            VALUES
+            ($1, $2, $3, $4)
+            `;
             const value = [created_at, sectionId, ExamSections[i]?.ScheduleName, updated_at];
             await pool.query(groupQuery, value);
             await pool.query(query, values);
           }
-          // console.log(sectionData.rows[0], "sectionIdsectionId");
-          // add group info after section created
         } catch (error) {
           // Handle any errors that may occur during the database query
           console.error(`Error inserting row ${i + 1}:`, error);
@@ -178,13 +166,37 @@ const createExam = async (req, res) => {
     // Insert Students into students table
     if (ExamStudents.length !== 0) {
       for (let i = 0; i < ExamStudents.length; i++) {
-        const query = `
-        INSERT INTO students(sequence_number, ext_student_id, exam_id, name, surname, email, address, phone, social, school, graduation_date, created_at, updated_at, is_present, is_terminated, reason)
-        VALUES
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`;
-        const values = [
+        const extStudentId = ExamStudents[i]?.UserId;
+
+        // Check if the student already exists
+        const checkStudentQuery = `
+          SELECT id FROM students
+          WHERE ext_student_id = $1 AND exam_id = $2`;
+        const checkStudentValues = [extStudentId, createdExamId];
+
+        try {
+          const checkStudentResult = await pool.query(checkStudentQuery, checkStudentValues);
+
+          // If the student already exists, skip insertion
+          if (checkStudentResult.rows.length > 0) {
+            console.log(
+              `Student with ext_student_id ${extStudentId} already exists. Skipping insertion.`
+            );
+            continue;
+          }
+        } catch (error) {
+          console.error(`Error checking for existing student:`, error);
+          return res.status(500).json({ message: "Server error", error: error });
+        }
+
+        // If the student does not exist, perform the insertion
+        const insertStudentQuery = `
+          INSERT INTO students(sequence_number, ext_student_id, exam_id, name, surname, email, address, phone, social, school, graduation_date, created_at, updated_at, is_present, is_terminated, reason)
+          VALUES
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`;
+        const insertStudentValues = [
           ExamStudents[i]?.CandidateExamSeqNum,
-          ExamStudents[i]?.UserId,
+          extStudentId,
           createdExamId,
           ExamStudents[i]?.student_name,
           ExamStudents[i]?.student_surname,
@@ -200,15 +212,16 @@ const createExam = async (req, res) => {
           null,
           "",
         ];
+
         try {
-          await pool.query(query, values);
+          await pool.query(insertStudentQuery, insertStudentValues);
         } catch (error) {
-          // Handle any errors that may occur during the database query
           console.error(`Error inserting row ${i + 1}:`, error);
           return res.status(500).json({ message: "Server error", error: error });
         }
       }
     }
+
     return res.status(200).json({
       message: "Exam created successfully",
     });

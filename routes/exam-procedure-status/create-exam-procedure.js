@@ -53,7 +53,7 @@ const createExamProcedure = async (req, res) => {
       // If no available and unassigned examiners, set examiner_id as null
       const insertQuery = await pool.query(
         "INSERT INTO exam_procedure_status (procedureid, examiner_id, exam_id, assigned_date, student_id) VALUES ($1, $2, $3, $4, $5)",
-        [procedureid, null, exam_id, assigned_date, student_id]
+        [procedureid, 1, exam_id, assigned_date, student_id]
       );
 
       return res.status(201).json({

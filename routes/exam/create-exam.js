@@ -135,27 +135,40 @@ const createExam = async (req, res) => {
           let sectionId = null;
           if (checkSectionResult.rows.length > 0) {
             sectionId = checkSectionResult.rows[0]?.id;
+
+            const query = `
+          INSERT INTO exam_sections(created_at, exam_id, section_id,updated_at)
+          VALUES
+          ($1, $2, $3, $4)`;
+            const values = [created_at, createdExamId, sectionId, updated_at];
+            const groupQuery = `
+              INSERT INTO groups(created_at, exam_section_id, title, updated_at)
+              VALUES
+              ($1, $2, $3, $4)
+              `;
+            const value = [created_at, sectionId, ExamSections[i]?.ScheduleName, updated_at];
+            await pool.query(groupQuery, value);
+            await pool.query(query, values);
           } else {
             const sectionData = await pool.query(sectionQuery, sectionValues);
             sectionId = sectionData.rows[0]?.id;
-          }
-          // console.log(sectionData.rows[0], "sectionIdsectionId");
-          // add group info after section created
-          if (sectionId !== undefined) {
+
             const query = `
-        INSERT INTO exam_sections(created_at, exam_id, section_id,updated_at)
-        VALUES
-        ($1, $2, $3, $4)`;
+          INSERT INTO exam_sections(created_at, exam_id, section_id,updated_at)
+          VALUES
+          ($1, $2, $3, $4)`;
             const values = [created_at, createdExamId, sectionId, updated_at];
             const groupQuery = `
-            INSERT INTO groups(created_at, exam_section_id, title, updated_at)
-            VALUES
-            ($1, $2, $3, $4)
-            `;
+              INSERT INTO groups(created_at, exam_section_id, title, updated_at)
+              VALUES
+              ($1, $2, $3, $4)
+              `;
             const value = [created_at, sectionId, ExamSections[i]?.ScheduleName, updated_at];
             await pool.query(groupQuery, value);
             await pool.query(query, values);
           }
+          // console.log(sectionData.rows[0], "sectionIdsectionId");
+          // add group info after section created
         } catch (error) {
           // Handle any errors that may occur during the database query
           console.error(`Error inserting row ${i + 1}:`, error);

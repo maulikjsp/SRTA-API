@@ -21,8 +21,8 @@ INNER JOIN
     "procedures" ON "procedures"."id" = "exam_procedure_status"."procedureid"
 INNER JOIN 
     "exams" ON "exams"."id" = "exam_procedure_status"."exam_id"
-INNER JOIN
-    "users" ON "users"."id" = "exam_procedure_status"."examiner_id"`);
+LEFT JOIN
+    "users" ON "users"."id" = "exam_procedure_status"."examiner_id";`);
 
     // Extract the rows from the query result
     const records = queryResult.rows;

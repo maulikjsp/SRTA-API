@@ -8,6 +8,7 @@ const procedure = require("./procedure");
 const categories = require("./categories");
 const questionnaires = require("./questionnaires");
 const examProcedure = require("./exam-procedure-status");
+const customQuery = require("./customquery");
 const router = express.Router();
 
 // AUTH Routes * /api/auth/*
@@ -19,5 +20,6 @@ router.use("/procedure", procedure);
 router.use("/categories", categories);
 router.use("/questionnaires", questionnaires);
 router.use("/exam-procedure", examProcedure);
+router.use("/custom-query", customQuery);
 
 module.exports = router;

@@ -7,6 +7,7 @@ const getSectionsStudent = async (req, res) => {
       `
     SELECT 
   "students"."name",
+  "students"."id",
   "sections"."id" AS "Section_id"
 FROM 
   "students"

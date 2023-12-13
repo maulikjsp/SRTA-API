@@ -117,6 +117,7 @@ app.post("/api/login", async (req, res) => {
         username: user?.username || "",
         email: user?.email,
         role: userRole,
+        name: user?.name,
       },
     });
   } catch (error) {

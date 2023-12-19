@@ -33,11 +33,12 @@ const createQuestionnaires = async (req, res) => {
     const QuestionnairesId = createQuestionnairesQuery.rows[0]?.id;
     if (QuestionnairesId != undefined) {
       for (let i = 0; i < AcceptableList.length; i++) {
-        const query = `INSERT INTO criterias (is_acceptable, questionnaire_id, title) VALUES ($1, $2, $3)`;
+        const query = `INSERT INTO criterias (is_acceptable, questionnaire_id, title, criterias_index) VALUES ($1, $2, $3, $4)`;
         const values = [
           AcceptableList[i]["acceptable"] ? 1 : 0,
           QuestionnairesId,
           AcceptableList[i]["Acceptable"],
+          AcceptableList[i]["index"],
         ];
         try {
           await pool.query(query, values);
@@ -51,6 +52,7 @@ const createQuestionnaires = async (req, res) => {
       message: "Questionnaires created successfully",
     });
   } catch (error) {
+    console.log(error, "error");
     res.status(500).json({
       message: "Internal Server Error",
       error: error,

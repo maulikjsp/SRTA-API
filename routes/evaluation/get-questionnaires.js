@@ -22,7 +22,8 @@ const getQuestionairesByProcedureId = async (req, res) => {
       const criteriaQuery = await pool.query(
         `
           SELECT "criterias"."title",
-          "criterias"."is_acceptable"
+          "criterias"."is_acceptable",
+          "criterias"."criterias_index"
           FROM criterias
           WHERE questionnaire_id = $1 
         `,

@@ -2,7 +2,7 @@ const { pool } = require("../../config/db");
 
 const getProcedureOfEvaluation = async (req, res) => {
   try {
-    const procedureQuery = await pool.query(`SELECT procedures.*
+    const procedureQuery = await pool.query(`SELECT DISTINCT procedures.*
     FROM procedures
     JOIN questionnaires ON procedures.id = questionnaires.procedure_id;
      `);

@@ -34,6 +34,7 @@ const getQuestionairesByProcedureId = async (req, res) => {
       questionnaires.push({
         questionnaires_title: queryData[i]?.queationnaires_title, // Corrected typo
         criteria: criteriaQuery.rows,
+        questionnaires_id: queryData[i]?.questionnaires_id,
       });
     }
 

@@ -44,8 +44,8 @@ const createExamProcedure = async (req, res) => {
 
       // Insert data into the table
       const insertQuery = await pool.query(
-        "INSERT INTO exam_procedure_status (procedureid, examiner_id, exam_id, assigned_date, student_id) VALUES ($1, $2, $3, $4, $5)",
-        [procedureid, examiner_id, exam_id, assigned_date, student_id]
+        "INSERT INTO exam_procedure_status (procedureid, examiner_id, exam_id, assigned_date, student_id, status) VALUES ($1, $2, $3, $4, $5, $6)",
+        [procedureid, examiner_id, exam_id, assigned_date, student_id, "Not Completed"]
       );
 
       return res.status(201).json({ message: "Student added successfully" });

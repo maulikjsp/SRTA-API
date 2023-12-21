@@ -14,6 +14,7 @@ const getExamProcedureStatus = async (req, res) => {
     "exam_procedure_status"."procedureid",
     "exam_procedure_status"."examiner_id",
     "exam_procedure_status"."exam_id",
+    "exam_procedure_status"."status",
     "exams"."examname"
 FROM  
     exam_procedure_status

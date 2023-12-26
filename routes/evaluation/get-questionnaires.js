@@ -5,7 +5,7 @@ const getQuestionairesByProcedureId = async (req, res) => {
     const id = req.params.id;
     const questionnairesQuery = await pool.query(
       `
-      SELECT "questionnaires"."title" as "queationnaires_title",
+      SELECT 
       "questionnaires"."procedure_id",
       "questionnaires"."id" as "questionnaires_id",
       "questionnaires"."section_id"

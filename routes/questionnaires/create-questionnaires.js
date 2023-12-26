@@ -18,16 +18,16 @@ const createQuestionnaires = async (req, res) => {
     const section_id = selectedSection?.id;
 
     // Check if the examname or examcode already exists
-    const checkQuery = await pool.query("SELECT * FROM questionnaires WHERE title = $1", [title]);
-    if (checkQuery.rows.length > 0) {
-      return res.status(400).json({
-        message: "Questionnaires already exists with given title",
-      });
-    }
+    // const checkQuery = await pool.query("SELECT * FROM questionnaires WHERE title = $1", [title]);
+    // if (checkQuery.rows.length > 0) {
+    //   return res.status(400).json({
+    //     message: "Questionnaires already exists with given title",
+    //   });
+    // }
 
     const createQuestionnairesQuery = await pool.query(
-      "INSERT INTO questionnaires (category_id, exam_type_id, procedure_id, section_id, title) VALUES($1, $2, $3, $4, $5)RETURNING id",
-      [category_id, exam_type_id, procedure_id, section_id, title]
+      "INSERT INTO questionnaires (category_id, exam_type_id, procedure_id, section_id) VALUES($1, $2, $3, $4)RETURNING id",
+      [category_id, exam_type_id, procedure_id, section_id]
     );
 
     const QuestionnairesId = createQuestionnairesQuery.rows[0]?.id;

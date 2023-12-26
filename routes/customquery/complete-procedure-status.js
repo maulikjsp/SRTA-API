@@ -13,4 +13,4 @@ const completeExamProcedureStatus = async (req, res) => {
   }
 };
 
-module.exports = completeProcedureStatus;
+module.exports = completeExamProcedureStatus;

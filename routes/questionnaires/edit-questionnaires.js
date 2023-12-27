@@ -37,40 +37,21 @@ const editQuestionnaires = async (req, res) => {
     );
 
     if (id != undefined) {
-      for (let i = 0; i < AcceptableList.length; i++) {
-        if (AcceptableList[i]["id"] != undefined) {
-          // If the ID exists, update the existing record
-          const query = `
-              UPDATE criterias 
-              SET is_acceptable = $1, title = $3 
-              WHERE id = $2
-            `;
+      await pool.query(`DELETE FROM criterias WHERE questionnaire_id = $1`, [id]);
+      if (id != undefined) {
+        for (let i = 0; i < AcceptableList.length; i++) {
+          const query = `INSERT INTO criterias (is_acceptable, questionnaire_id, title, criterias_index) VALUES ($1, $2, $3, $4)`;
           const values = [
             AcceptableList[i]["acceptable"] ? 1 : 0,
-            AcceptableList[i]["id"],
+            id,
             AcceptableList[i]["Acceptable"],
+            AcceptableList[i]["index"],
           ];
           try {
             await pool.query(query, values);
           } catch (error) {
             // Handle any errors that may occur during the database query
-            console.error(`Error updating row ${i + 1}:`, error);
-          }
-        } else {
-          // If the ID does not exist, it's a new item, so insert it
-          const insertQuery = `
-              INSERT INTO criterias (is_acceptable, questionnaire_id, title) VALUES ($1, $2, $3)
-            `;
-          const insertValues = [
-            AcceptableList[i]["acceptable"] ? 1 : 0,
-            id,
-            AcceptableList[i]["Acceptable"],
-          ];
-          try {
-            await pool.query(insertQuery, insertValues);
-          } catch (error) {
-            // Handle any errors that may occur during the database query
-            console.error(`Error inserting new row ${i + 1}:`, error);
+            console.error(`Error inserting row ${i + 1}:`, error);
           }
         }
       }

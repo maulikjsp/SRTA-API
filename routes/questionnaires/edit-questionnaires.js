@@ -8,7 +8,6 @@ const editQuestionnaires = async (req, res) => {
       selectedExamType,
       selectedProcedure,
       selectedSection,
-      title,
       id,
     } = req.body;
 
@@ -18,23 +17,23 @@ const editQuestionnaires = async (req, res) => {
     const section_id = selectedSection?.id;
 
     // Check if the questionnaires title already exists
-    const checkQuery = await pool.query(
-      "SELECT * FROM questionnaires WHERE title = $1 AND id != $2",
-      [title, id]
-    );
-    if (checkQuery.rows.length > 0) {
-      return res.status(400).json({
-        message: "Questionnaires already exists with given title",
-      });
-    }
+    // const checkQuery = await pool.query(
+    //   "SELECT * FROM questionnaires WHERE title = $1 AND id != $2",
+    //   [title, id]
+    // );
+    // if (checkQuery.rows.length > 0) {
+    //   return res.status(400).json({
+    //     message: "Questionnaires already exists with given title",
+    //   });
+    // }
 
     const updateQuestionnairesQuery = await pool.query(
       `
         UPDATE questionnaires 
-        SET category_id = $1, exam_type_id = $2, procedure_id = $3, section_id = $4, title = $5 
-        WHERE id = $6
+        SET category_id = $1, exam_type_id = $2, procedure_id = $3, section_id = $4, 
+        WHERE id = $5
         `,
-      [category_id, exam_type_id, procedure_id, section_id, title, id]
+      [category_id, exam_type_id, procedure_id, section_id, id]
     );
 
     if (id != undefined) {

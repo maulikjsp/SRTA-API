@@ -30,7 +30,7 @@ const editQuestionnaires = async (req, res) => {
     const updateQuestionnairesQuery = await pool.query(
       `
         UPDATE questionnaires 
-        SET category_id = $1, exam_type_id = $2, procedure_id = $3, section_id = $4, 
+        SET category_id = $1, exam_type_id = $2, procedure_id = $3, section_id = $4
         WHERE id = $5
         `,
       [category_id, exam_type_id, procedure_id, section_id, id]

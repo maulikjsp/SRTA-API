@@ -24,7 +24,7 @@ const getQuestionairesByProcedureId = async (req, res) => {
           SELECT "criterias"."title",
           "criterias"."is_acceptable",
           "criterias"."criterias_index",
-          "criterias"."id",
+          "criterias"."id"
           FROM criterias
           WHERE questionnaire_id = $1 
         `,

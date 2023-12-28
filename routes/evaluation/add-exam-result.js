@@ -18,6 +18,9 @@ const addExamResult = async (req, res) => {
         `,
         [criteria_ans, examiner_id, criteria_id]
       );
+      return res.status(201).json({
+        message: "Questionnaires answers saved",
+      });
     } else {
       await pool.query(
         `
@@ -31,7 +34,9 @@ const addExamResult = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
+      error: error,
       message: "Internal Server Error",
     });
   }

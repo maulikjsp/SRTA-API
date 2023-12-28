@@ -39,27 +39,27 @@ const createExamProcedure = async (req, res) => {
       });
     }
 
-    if (availableExaminer) {
-      examiner_id = availableExaminer.id;
+    // if (availableExaminer) {
+    //   examiner_id = availableExaminer.id;
 
-      // Insert data into the table
-      const insertQuery = await pool.query(
-        "INSERT INTO exam_procedure_status (procedureid, examiner_id, exam_id, assigned_date, student_id, status) VALUES ($1, $2, $3, $4, $5, $6)",
-        [procedureid, examiner_id, exam_id, assigned_date, student_id, "Not Completed"]
-      );
+    // Insert data into the table
+    const insertQuery = await pool.query(
+      "INSERT INTO exam_procedure_status (procedureid, examiner_id, exam_id, assigned_date, student_id, status) VALUES ($1, $2, $3, $4, $5, $6)",
+      [procedureid, null, exam_id, assigned_date, student_id, "Not Completed"]
+    );
 
-      return res.status(201).json({ message: "Student added successfully" });
-    } else {
-      // If no available and unassigned examiners, set examiner_id as null
-      const insertQuery = await pool.query(
-        "INSERT INTO exam_procedure_status (procedureid, examiner_id, exam_id, assigned_date, student_id) VALUES ($1, $2, $3, $4, $5)",
-        [procedureid, 1, exam_id, assigned_date, student_id]
-      );
+    return res.status(201).json({ message: "Student added successfully" });
+    // } else {
+    //   // If no available and unassigned examiners, set examiner_id as null
+    //   const insertQuery = await pool.query(
+    //     "INSERT INTO exam_procedure_status (procedureid, examiner_id, exam_id, assigned_date, student_id) VALUES ($1, $2, $3, $4, $5)",
+    //     [procedureid, 1, exam_id, assigned_date, student_id]
+    //   );
 
-      return res.status(201).json({
-        message: "All examiners are already assigned, student added with examiner_id as null",
-      });
-    }
+    //   return res.status(201).json({
+    //     message: "All examiners are already assigned, student added with examiner_id as null",
+    //   });
+    // }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });

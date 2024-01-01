@@ -10,6 +10,7 @@ const { Server } = require("socket.io");
 const http = require("http");
 
 const app = express();
+app.use(cors());
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER || "maulikd",
@@ -65,7 +66,6 @@ LEFT JOIN
   });
 });
 
-app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

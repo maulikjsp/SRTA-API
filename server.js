@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const { tokenVerification } = require("./middleware");
 const routes = require("./routes");
+const { Server } = require("socket.io");
+const http = require("http");
 
 const app = express();
 
@@ -16,6 +18,51 @@ const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD || "c0J7mahetQHw",
   port: process.env.POSTGRES_PORT || 5432,
   ssl: true,
+});
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:3000", "http://192.168.1.25:3000", "https://srta-5t7o.vercel.app/"],
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log(`a user connected ${socket.id}`);
+
+  socket.on("evaluation status updated", async (data) => {
+    const { status, procedure_id, student_id, submited_examiner_id } = data;
+    console.log("working");
+    await pool.query(
+      `UPDATE exam_procedure_status SET status = $1, submited_examiner_id = $4 WHERE procedureid = $2 AND student_id = $3`,
+      [status, procedure_id, student_id, submited_examiner_id]
+    );
+    const queryResult = await pool.query(`
+    SELECT
+    "exam_procedure_status"."id",
+    "exam_procedure_status"."student_id" AS "studentCode",
+    "exams"."active" AS "currentExamStatus",
+    "procedures"."title" AS "onGoingProcedure",
+    "users"."name" AS "currentAssignedExaminer",  
+    "exam_procedure_status"."assigned_date" AS "AssignedDate",
+    "exam_procedure_status"."procedureid",
+    "exam_procedure_status"."examiner_id",
+    "exam_procedure_status"."exam_id",
+    "exam_procedure_status"."status",
+    "exams"."examname"
+FROM  
+    exam_procedure_status
+INNER JOIN 
+    "procedures" ON "procedures"."id" = "exam_procedure_status"."procedureid"
+INNER JOIN 
+    "exams" ON "exams"."id" = "exam_procedure_status"."exam_id"
+LEFT JOIN
+    "users" ON "users"."id" = "exam_procedure_status"."examiner_id";`);
+
+    // Extract the rows from the query result
+    const records = queryResult.rows;
+    socket.broadcast.emit("evaluation status", records);
+  });
 });
 
 app.use(cors());
@@ -166,6 +213,6 @@ app.get("/api/test", tokenVerification, async (req, res) => {
 
 const port = process.env.PORT || 3002;
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

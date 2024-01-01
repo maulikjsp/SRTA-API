@@ -23,7 +23,7 @@ const pool = new Pool({
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://192.168.1.25:3000", "https://srta-5t7o.vercel.app/"],
+    origin: true,
     methods: ["GET", "POST"],
   },
 });

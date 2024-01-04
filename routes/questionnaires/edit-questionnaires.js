@@ -40,9 +40,9 @@ const editQuestionnaires = async (req, res) => {
       await pool.query(`DELETE FROM criterias WHERE questionnaire_id = $1`, [id]);
       if (id != undefined) {
         for (let i = 0; i < AcceptableList.length; i++) {
-          const query = `INSERT INTO criterias (is_acceptable, questionnaire_id, title, criterias_index) VALUES ($1, $2, $3, $4)`;
+          const query = `INSERT INTO criterias (points, questionnaire_id, title, criterias_index) VALUES ($1, $2, $3, $4)`;
           const values = [
-            AcceptableList[i]["acceptable"] ? 1 : 0,
+            AcceptableList[i]["points"],
             id,
             AcceptableList[i]["Acceptable"],
             AcceptableList[i]["index"],

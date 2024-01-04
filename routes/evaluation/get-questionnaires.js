@@ -21,8 +21,7 @@ const getQuestionairesByProcedureId = async (req, res) => {
     for (let i = 0; i < queryData.length; i++) {
       const criteriaQuery = await pool.query(
         `
-          SELECT "criterias"."title",
-          "criterias"."is_acceptable",
+          SELECT "criterias"."title",          
           "criterias"."criterias_index",
           "criterias"."id"
           FROM criterias

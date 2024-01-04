@@ -35,8 +35,8 @@ io.on("connection", (socket) => {
     const { status, procedure_id, student_id, submited_examiner_id } = data;
     console.log("working");
     await pool.query(
-      `UPDATE exam_procedure_status SET status = $1, submited_examiner_id = $4 WHERE procedureid = $2 AND student_id = $3`,
-      [status, procedure_id, student_id, submited_examiner_id]
+      `UPDATE exam_procedure_status SET status = $1, submited_examiner_id = $4, examiner_id = $5 WHERE procedureid = $2 AND student_id = $3`,
+      [status, procedure_id, student_id, submited_examiner_id, submited_examiner_id]
     );
     const queryResult = await pool.query(`
     SELECT

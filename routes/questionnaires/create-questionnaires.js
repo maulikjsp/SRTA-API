@@ -33,9 +33,9 @@ const createQuestionnaires = async (req, res) => {
     const QuestionnairesId = createQuestionnairesQuery.rows[0]?.id;
     if (QuestionnairesId != undefined) {
       for (let i = 0; i < AcceptableList.length; i++) {
-        const query = `INSERT INTO criterias (is_acceptable, questionnaire_id, title, criterias_index) VALUES ($1, $2, $3, $4)`;
+        const query = `INSERT INTO criterias (points, questionnaire_id, title, criterias_index) VALUES ($1, $2, $3, $4)`;
         const values = [
-          AcceptableList[i]["acceptable"] ? 1 : 0,
+          AcceptableList[i]["points"],
           QuestionnairesId,
           AcceptableList[i]["Acceptable"],
           AcceptableList[i]["index"],

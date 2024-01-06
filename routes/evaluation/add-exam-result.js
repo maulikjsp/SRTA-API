@@ -5,8 +5,8 @@ const addExamResult = async (req, res) => {
       req.body;
 
     const checkQuery = await pool.query(
-      `SELECT * FROM exam_submission WHERE student_id = $1 AND criteria_id = $2 AND questionnaires_id = $3`,
-      [student_id, criteria_id, questionnaires_id]
+      `SELECT * FROM exam_submission WHERE student_id = $1 AND criteria_id = $2 AND questionnaires_id = $3 AND experiment_id = $4`,
+      [student_id, criteria_id, questionnaires_id, examiner_id]
     );
 
     if (checkQuery?.rows.length > 0) {

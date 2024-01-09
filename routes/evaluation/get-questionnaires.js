@@ -37,6 +37,11 @@ const getQuestionairesByProcedureId = async (req, res) => {
         questionnaires_id: queryData[i]?.questionnaires_id,
       });
     }
+    if (questionnaires.length === 0) {
+      return res.status(400).json({
+        message: "No Questionnaires Found for this Procedure. Please Create Questionnaires First",
+      });
+    }
 
     return res.status(201).json({
       questionnaires: questionnaires,

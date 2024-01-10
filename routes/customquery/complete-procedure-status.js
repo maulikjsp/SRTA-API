@@ -10,11 +10,11 @@ const completeExamProcedureStatus = async (req, res) => {
       [procedure_id, student_id, examiner_id]
     );
 
-    if (existingSubmission.rows.length > 0) {
-      return res
-        .status(400)
-        .json({ message: "Examiner has already submitted for this procedure and student." });
-    }
+    // if (existingSubmission.rows.length > 0) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Examiner has already submitted for this procedure and student." });
+    // }
 
     const statuses = await Promise.all(
       questionnaires_id?.map(async (questionnaire_id) => {
@@ -28,7 +28,8 @@ const completeExamProcedureStatus = async (req, res) => {
       })
     );
 
-    const completedCount = statuses.filter((status) => status === "completed").length;
+    const completedCount =
+      statuses.filter((status) => status === "completed").length === questionnaires_id.length;
 
     const updateStatusQuery = `
       UPDATE exam_procedure_status
@@ -42,7 +43,7 @@ const completeExamProcedureStatus = async (req, res) => {
     `;
 
     await pool.query(updateStatusQuery, [
-      completedCount >= 3 ? "completed" : "pending",
+      completedCount ? "completed" : "pending",
       examiner_id,
       procedure_id,
       student_id,

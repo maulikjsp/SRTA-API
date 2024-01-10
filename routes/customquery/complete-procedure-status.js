@@ -10,11 +10,11 @@ const completeExamProcedureStatus = async (req, res) => {
       [procedure_id, student_id, examiner_id]
     );
 
-    // if (existingSubmission.rows.length > 0) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Examiner has already submitted for this procedure and student." });
-    // }
+    if (existingSubmission.rows.length > 0) {
+      return res
+        .status(400)
+        .json({ message: "Examiner has already submitted for this procedure and student." });
+    }
 
     const statuses = await Promise.all(
       questionnaires_id?.map(async (questionnaire_id) => {

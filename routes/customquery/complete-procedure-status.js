@@ -10,11 +10,11 @@ const completeExamProcedureStatus = async (req, res) => {
       [procedure_id, student_id, examiner_id]
     );
 
-    if (existingSubmission.rows.length > 0) {
-      return res
-        .status(400)
-        .json({ message: "Examiner has already submitted for this procedure and student." });
-    }
+    // if (existingSubmission.rows.length > 0) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Examiner has already submitted for this procedure and student." });
+    // }
 
     const statuses = await Promise.all(
       questionnaires_id?.map(async (questionnaire_id) => {
@@ -49,16 +49,14 @@ const completeExamProcedureStatus = async (req, res) => {
       student_id,
     ]);
 
-    for (let i = 0; i < questionnaires_id.length; i++) {
-      await pool.query(insertSubmissionQuery, [
-        student_id,
-        examiner_id,
-        procedure_id,
-        questionnaires,
-      ]);
-    }
+    await pool.query(insertSubmissionQuery, [
+      student_id,
+      examiner_id,
+      procedure_id,
+      questionnaires,
+    ]);
 
-    return res.status(200).json({ message: "Procedure status updated" });
+    return res.status(200).json({ message: "Procedure status updated", statuses: completedCount });
   } catch (error) {
     console.log(error, "Error");
     return res.status(500).json({ message: "Server error" });

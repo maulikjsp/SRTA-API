@@ -62,7 +62,9 @@ LEFT JOIN
 
     // Extract the rows from the query result
     const records = queryResult.rows;
-    socket.broadcast.emit("evaluation status", records);
+
+    // Use `socket.emit` instead of `socket.io.emit`
+    socket.emit("evaluation status", records);
   });
 });
 

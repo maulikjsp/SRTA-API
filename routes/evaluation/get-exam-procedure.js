@@ -3,7 +3,7 @@ const { pool } = require("../../config/db");
 const getProcedures = async (req, res) => {
   try {
     const proceduresQuery = await pool.query(`
-    SELECT "procedures"."id","procedures"."title", "procedures"."section_id"
+    SELECT DISTINCT "procedures"."id","procedures"."title", "procedures"."section_id"
     FROM "procedures"
     INNER JOIN "exam_procedure_status" ON "exam_procedure_status"."procedureid" = "procedures"."id"
     WHERE NOT EXISTS (

@@ -37,8 +37,8 @@ const completeExamProcedureStatus = async (req, res) => {
     `;
 
     const insertSubmissionQuery = `
-      INSERT INTO procedure_submission (student_id, examiner_id, procedure_id, questionnaires, escalated)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO procedure_submission (student_id, examiner_id, procedure_id, questionnaires)
+      VALUES ($1, $2, $3, $4)
     `;
 
     const escalated = statuses.filter((status) => status === "pending").length >= 3;

@@ -32,7 +32,7 @@ const completeExamProcedureStatus = async (req, res) => {
 
     const updateStatusQuery = `
       UPDATE exam_procedure_status
-      SET status = $1, examiner_id = $2
+      SET status = $1, examiner_id = $2, escalated = $5
       WHERE procedureid = $3 AND student_id = $4
     `;
 
@@ -48,6 +48,7 @@ const completeExamProcedureStatus = async (req, res) => {
       examiner_id,
       procedure_id,
       student_id,
+      escalated,
     ]);
 
     await pool.query(insertSubmissionQuery, [
@@ -55,7 +56,6 @@ const completeExamProcedureStatus = async (req, res) => {
       examiner_id,
       procedure_id,
       questionnaires,
-      escalated,
     ]);
 
     return res.status(200).json({ message: "Procedure status updated", statuses: completedCount });

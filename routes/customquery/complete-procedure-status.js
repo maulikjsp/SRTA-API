@@ -28,8 +28,7 @@ const completeExamProcedureStatus = async (req, res) => {
       })
     );
 
-    const completedCount =
-      statuses.filter((status) => status === "completed").length === questionnaires_id.length;
+    const completedCount = statuses.filter((status) => status === "completed").length >= 3;
 
     const updateStatusQuery = `
       UPDATE exam_procedure_status
@@ -41,6 +40,8 @@ const completeExamProcedureStatus = async (req, res) => {
       INSERT INTO procedure_submission (student_id, examiner_id, procedure_id, questionnaires)
       VALUES ($1, $2, $3, $4)
     `;
+
+    const escalated = statuses.filter((status) => status === "pending").length >= 3;
 
     await pool.query(updateStatusQuery, [
       completedCount ? "completed" : "pending",
@@ -54,6 +55,7 @@ const completeExamProcedureStatus = async (req, res) => {
       examiner_id,
       procedure_id,
       questionnaires,
+      escalated,
     ]);
 
     return res.status(200).json({ message: "Procedure status updated", statuses: completedCount });

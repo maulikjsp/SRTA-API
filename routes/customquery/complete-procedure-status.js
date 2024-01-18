@@ -28,7 +28,10 @@ const completeExamProcedureStatus = async (req, res) => {
       })
     );
 
-    const completedCount = statuses.filter((status) => status === "completed").length >= 3;
+    const requiredCompletedCount = 3;
+
+    const completedCount =
+      statuses.filter((status) => status === "completed").length === statuses.length ;
 
     const updateStatusQuery = `
       UPDATE exam_procedure_status
@@ -58,7 +61,7 @@ const completeExamProcedureStatus = async (req, res) => {
       questionnaires,
     ]);
 
-    return res.status(200).json({ message: "Procedure status updated", statuses: completedCount });
+    return res.status(200).json({ message: "Procedure status updated", statuses: statuses });
   } catch (error) {
     console.log(error, "Error");
     return res.status(500).json({ message: "Server error" });

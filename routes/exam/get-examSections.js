@@ -15,7 +15,7 @@ const getExamSections = async (req, res) => {
 
     const examStudentsQuery = await poolUat.query(
       `
-        SELECT 
+        SELECT DISTINCT
             "CandidateExams"."CandidateProfileId",
             "CandidateExams"."CandidateExamSeqNum",
             "CandidateProfiles"."UserId",

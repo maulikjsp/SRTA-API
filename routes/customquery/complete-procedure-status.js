@@ -31,7 +31,7 @@ const completeExamProcedureStatus = async (req, res) => {
     const requiredCompletedCount = 3;
 
     const completedCount =
-      statuses.filter((status) => status === "completed").length === statuses.length ;
+      statuses.filter((status) => status === "completed").length === statuses.length;
 
     const updateStatusQuery = `
       UPDATE exam_procedure_status
@@ -44,7 +44,7 @@ const completeExamProcedureStatus = async (req, res) => {
       VALUES ($1, $2, $3, $4)
     `;
 
-    const escalated = statuses.filter((status) => status === "pending").length >= 3;
+    const escalated = statuses.filter((status) => status === "pending").length >= 2;
 
     await pool.query(updateStatusQuery, [
       completedCount ? "completed" : "pending",

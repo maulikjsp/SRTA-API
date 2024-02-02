@@ -17,12 +17,13 @@ const completeExamProcedureStatus = async (req, res) => {
     // }
 
     const statuses = await Promise.all(
-      questionnaires_id?.map(async (questionnaire_id) => {
+      questionnaires_id?.map(async (questionnaire_id, index) => {
         const result = await pool.query("SELECT check_criteria_status($1, $2, $3, $4) AS status", [
           procedure_id,
           questionnaire_id,
           examiner_id,
           student_id,
+          questionnaires[index]["ans"],
         ]);
         return result.rows[0]["status"];
       })

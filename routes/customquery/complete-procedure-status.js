@@ -17,39 +17,37 @@ const completeExamProcedureStatus = async (req, res) => {
     // }
 
     const statuses = await Promise.all(
-      questionnaires_id?.map(async (questionnaire_id, index) => {
-        const result = await pool.query(
-          "SELECT check_criteria_status($1, $2, $3, $4, $5) AS status",
-          [procedure_id, questionnaire_id, examiner_id, student_id, questionnaires[index]["ans"]]
-        );
+      questionnaires_id?.map(async (questionnaire_id) => {
+        const result = await pool.query("SELECT check_criteria_status($1, $2, $3, $4) AS status", [
+          procedure_id,
+          questionnaire_id,
+          examiner_id,
+          student_id,
+        ]);
         return result.rows[0]["status"];
       })
     );
 
-    const requiredCompletedCount = 3;
-
-    const completedCount =
-      statuses.filter((status) => status === "completed").length === statuses.length;
+    const completedCount = statuses.filter((status) => status === "completed").length >= 3;
 
     const updateStatusQuery = `
       UPDATE exam_procedure_status
-      SET status = $1, examiner_id = $2, escalated = $5
+      SET status = $1, examiner_id = $2
       WHERE procedureid = $3 AND student_id = $4
     `;
 
     const insertSubmissionQuery = `
-      INSERT INTO procedure_submission (student_id, examiner_id, procedure_id, questionnaires)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO procedure_submission (student_id, examiner_id, procedure_id, questionnaires, escalated )
+      VALUES ($1, $2, $3, $4, $5)
     `;
 
-    const escalated = statuses.filter((status) => status === "pending").length >= 2;
+    const escalated = statuses.filter((status) => status === "pending").length >= 3;
 
     await pool.query(updateStatusQuery, [
       completedCount ? "completed" : "pending",
       examiner_id,
       procedure_id,
       student_id,
-      escalated,
     ]);
 
     await pool.query(insertSubmissionQuery, [
@@ -57,9 +55,10 @@ const completeExamProcedureStatus = async (req, res) => {
       examiner_id,
       procedure_id,
       questionnaires,
+      escalated,
     ]);
 
-    return res.status(200).json({ message: "Procedure status updated", statuses: statuses });
+    return res.status(200).json({ message: "Procedure status updated", statuses: completedCount });
   } catch (error) {
     console.log(error, "Error");
     return res.status(500).json({ message: "Server error" });

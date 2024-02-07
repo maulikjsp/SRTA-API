@@ -61,6 +61,8 @@ const completeExamProcedureStatus = async (req, res) => {
 
     return res.status(200).json({
       message: "Procedure status updated",
+      escalated: escalated,
+      statuses: statuses,
     });
   } catch (error) {
     console.log(error, "Error");

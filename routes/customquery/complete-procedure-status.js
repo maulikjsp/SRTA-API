@@ -3,6 +3,7 @@ const { pool } = require("../../config/db");
 const completeExamProcedureStatus = async (req, res) => {
   try {
     const { procedure_id, student_id, examiner_id, questionnaires_id, questionnaires } = req.body;
+    const questionnairesCriteria = JSON.parse(questionnaires);
 
     // Check if examiner has already submitted for the given procedure and student
     const existingSubmission = await pool.query(
@@ -17,18 +18,18 @@ const completeExamProcedureStatus = async (req, res) => {
     // }
 
     const statuses = await Promise.all(
-      questionnaires_id?.map(async (questionnaire_id) => {
-        const result = await pool.query("SELECT check_criteria_status($1, $2, $3, $4) AS status", [
+      questionnairesCriteria?.map(async (item, index) => {
+        const result = await pool.query("SELECT check_student_status($1, $2, $3) AS status", [
           procedure_id,
-          questionnaire_id,
-          examiner_id,
           student_id,
+          item?.id,
         ]);
         return result.rows[0]["status"];
       })
     );
 
-    const completedCount = statuses.filter((status) => status === "completed").length >= 3;
+    const completedCount =
+      statuses.filter((status) => status === "completed").length === statuses.length;
 
     const updateStatusQuery = `
       UPDATE exam_procedure_status
@@ -41,7 +42,7 @@ const completeExamProcedureStatus = async (req, res) => {
       VALUES ($1, $2, $3, $4, $5)
     `;
 
-    const escalated = statuses.filter((status) => status === "pending").length >= 3;
+    const escalated = statuses.filter((status) => status === "escalated").length >= 1;
 
     await pool.query(updateStatusQuery, [
       completedCount ? "completed" : "pending",
@@ -58,7 +59,9 @@ const completeExamProcedureStatus = async (req, res) => {
       escalated,
     ]);
 
-    return res.status(200).json({ message: "Procedure status updated", statuses: completedCount });
+    return res.status(200).json({
+      message: "Procedure status updated",
+    });
   } catch (error) {
     console.log(error, "Error");
     return res.status(500).json({ message: "Server error" });

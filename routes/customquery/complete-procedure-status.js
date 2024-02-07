@@ -29,7 +29,8 @@ const completeExamProcedureStatus = async (req, res) => {
     );
 
     const completedCount =
-      statuses.filter((status) => status === "completed").length === statuses.length;
+      statuses.filter((status) => status === "completed").length === statuses.length ||
+      statuses.length - 1;
 
     const updateStatusQuery = `
       UPDATE exam_procedure_status

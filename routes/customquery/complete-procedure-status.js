@@ -31,9 +31,11 @@ const completeExamProcedureStatus = async (req, res) => {
     const completedCount =
       statuses.filter((status) => status === "completed").length === statuses.length;
 
+    const escalated = statuses.filter((status) => status === "escalated").length >= 1;
+
     const updateStatusQuery = `
       UPDATE exam_procedure_status
-      SET status = $1, examiner_id = $2
+      SET status = $1, examiner_id = $2, escalated = $5
       WHERE procedureid = $3 AND student_id = $4
     `;
 
@@ -42,13 +44,12 @@ const completeExamProcedureStatus = async (req, res) => {
       VALUES ($1, $2, $3, $4, $5)
     `;
 
-    const escalated = statuses.filter((status) => status === "escalated").length >= 1;
-
     await pool.query(updateStatusQuery, [
       completedCount ? "completed" : "pending",
       examiner_id,
       procedure_id,
       student_id,
+      escalated,
     ]);
 
     await pool.query(insertSubmissionQuery, [

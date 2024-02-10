@@ -29,7 +29,9 @@ const completeExamProcedureStatus = async (req, res) => {
     );
 
     const completedCount =
-      statuses.filter((status) => status === "completed").length === statuses.length;
+      statuses.filter((status) => status === "completed").length === statuses.length ||
+      (statuses.length != 1 &&
+        statuses.filter((status) => status === "completed").length === statuses.length - 1);
 
     const escalated = statuses.filter((status) => status === "escalated").length === 1;
 

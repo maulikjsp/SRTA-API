@@ -12,6 +12,6 @@ router.get("/get-questionnairesById/:id", tokenVerification, getQuestionairesByP
 router.post("/add-exam-result", tokenVerification, addExamResult);
 router.get("/get-procedures", tokenVerification, getProcedures);
 router.get("/get-escalated-students", tokenVerification, getEscalatedStudent);
-router.get("/get-unmatched-criteria", tokenVerification, getUnmatchedCriteria);
+router.post("/get-unmatched-criteria", tokenVerification, getUnmatchedCriteria);
 
 module.exports = router;

@@ -21,7 +21,7 @@ const getEscalatedStudent = async (req, res) => {
   `
     );
     return res.status(201).json({
-      procedure: escalatedQuery.rows,
+      students: escalatedQuery.rows,
     });
   } catch (error) {
     return res.status(500).json({

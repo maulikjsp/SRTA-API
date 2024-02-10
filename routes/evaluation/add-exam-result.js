@@ -31,7 +31,7 @@ const addExamResult = async (req, res) => {
     } else {
       await pool.query(
         `
-        INSERT INTO exam_submission (examiner_id, student_id, procedure_id, questionnaires_id, criteria_ans, criteria_id)
+        INSERT INTO exam_submission (examiner_id, student_id, procedure_id, questionnaires_id, criteria_ans, criteria_id, title)
         VALUES ($1, $2 , $3, $4, $5, $6, $7) 
         `,
         [examiner_id, student_id, procedure_id, questionnaires_id, criteria_ans, criteria_id, title]

@@ -3,7 +3,8 @@ const { pool } = require("../../config/db");
 const getEscalatedStudent = async (req, res) => {
   try {
     const escalatedQuery = await pool.query(
-      `SELECT 
+      `SELECT
+      id,
       procedureid,
       examiner_id,
       student_id,

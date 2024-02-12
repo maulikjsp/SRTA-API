@@ -46,6 +46,13 @@ const submitMangerDecision = async (req, res) => {
       WHERE id = $2
     `;
       await pool.query(updateStatusQuery, ["completed", exam_procedure_id, false]);
+    } else {
+      const updateStatusQuery = `
+      UPDATE exam_procedure_status
+      SET status = $1, escalated = $3
+      WHERE id = $2
+    `;
+      await pool.query(updateStatusQuery, ["pending", exam_procedure_id, false]);
     }
     return res.status(201).json({
       message: "Questionnaires Submitted successfully",

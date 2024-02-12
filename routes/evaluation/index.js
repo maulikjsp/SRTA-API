@@ -7,11 +7,13 @@ const addExamResult = require("./add-exam-result");
 const getProcedures = require("./get-exam-procedure");
 const getEscalatedStudent = require("./get-escalated-students");
 const getUnmatchedCriteria = require("./get-unmatched-criteria");
+const submitMangerDecision = require("./add-manager-decision");
 
 router.get("/get-questionnairesById/:id", tokenVerification, getQuestionairesByProcedureId);
 router.post("/add-exam-result", tokenVerification, addExamResult);
 router.get("/get-procedures", tokenVerification, getProcedures);
 router.get("/get-escalated-students", tokenVerification, getEscalatedStudent);
 router.post("/get-unmatched-criteria", tokenVerification, getUnmatchedCriteria);
+router.post("/add-manager-decision", tokenVerification, submitMangerDecision);
 
 module.exports = router;

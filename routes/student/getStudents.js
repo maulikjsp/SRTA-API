@@ -2,13 +2,7 @@ const { pool } = require("../../config/db");
 
 const getStudents = async (req, res) => {
   try {
-    const studentsQuery = await pool.query(`
-    SELECT *
-         , exams.active
-    FROM students
-    INNER JOIN exams ON students.exam_id = exams.id
-    WHERE active = true
-    `);
+    const studentsQuery = await pool.query("SELECT * FROM students");
 
     const students = studentsQuery.rows;
 

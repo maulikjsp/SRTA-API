@@ -44,35 +44,6 @@ const completeExamProcedureStatus = async (req, res) => {
       VALUES ($1, $2, $3, $4, $5)
     `;
 
-    if (escalated) {
-      const nodemailer = require("nodemailer");
-      // Create a transporter using SMTP transport
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "maulikd@jspinfotech.com",
-          pass: "maulikdjspit@432",
-        },
-      });
-
-      // Email content
-      const mailOptions = {
-        from: "maulikd@jspinfotech.com",
-        to: "maulik@jspinfotech.com",
-        subject: "Subject of the email",
-        text: "Body of the email",
-      };
-
-      // Send email
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log("Email sent: " + info.response);
-        }
-      });
-    }
-
     await pool.query(updateStatusQuery, [
       completedCount ? "completed" : "pending",
       examiner_id,

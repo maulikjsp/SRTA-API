@@ -4,6 +4,7 @@ const getSections = async (req, res) => {
   try {
     const sectionQuery = await pool.query(`
     select 
+"sections"."id",
 "sections"."title"
 from exams
 inner join exam_sections on "exam_sections"."exam_id" = "exams"."id"

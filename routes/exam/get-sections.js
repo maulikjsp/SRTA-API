@@ -2,7 +2,14 @@ const { pool } = require("../../config/db");
 
 const getSections = async (req, res) => {
   try {
-    const sectionQuery = await pool.query("SELECT * FROM sections");
+    const sectionQuery = await pool.query(`
+    select 
+"sections"."title"
+from exams
+inner join exam_sections on "exam_sections"."exam_id" = "exams"."id"
+inner join sections on "sections"."id" = "exam_sections"."section_id"
+WHERE "exams"."active" = true
+    `);
 
     const sectionsData = sectionQuery.rows;
 

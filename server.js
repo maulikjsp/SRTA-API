@@ -66,6 +66,16 @@ LEFT JOIN
     // Use `socket.emit` instead of `socket.io.emit`
     socket.broadcast.emit("evaluation status", records);
   });
+
+  socket.on("call board status", async () => {
+    const status = await pool.query(`
+    SELECT * FROM get_students_with_exam_status_and_examiner_name()
+    `);
+
+    const records = status.rows;
+    console.log("Records", records);
+    socket.broadcast.emit("call board status data", records);
+  });
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));

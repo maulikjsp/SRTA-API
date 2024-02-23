@@ -32,6 +32,7 @@ const getExamSections = async (req, res) => {
             INNER JOIN public."CandidateProfiles" ON "CandidateExams"."CandidateProfileId" = "CandidateProfiles"."Id"
             INNER JOIN public."AbpUsers" ON "CandidateProfiles"."UserId" = "AbpUsers"."Id"
             INNER JOIN public."Schools" ON "CandidateProfiles"."GraduationSchoolId" = "Schools"."Id"
+            INNER JOIN public."CandidateExamSections" ON "CandidateExamSections"."CandidateExamId" = $1
             WHERE "CandidateExams"."ExamId" = $1 
             AND "CandidateExams"."IsDeleted" = 'f' AND "CandidateProfiles"."IsDeleted" = 'f' AND "CandidateProfiles"."IsDeleted" = 'f'
             `,

@@ -79,14 +79,28 @@ const createExam = async (req, res) => {
       createdExamId = exam.rows[0]?.id;
       console.log("createdExamId", createdExamId);
 
-      if (createdExamId !== undefined) {
-        examCreationSuccess = true;
-        const query = `INSERT INTO examtypes (examid, type) VALUES ($1, $2)`;
-        const values = [createdExamId, type];
-        await pool.query(query, values);
-        console.log("Exam created successfully.");
-      } else {
-        console.error("Exam creation failed.");
+      try {
+        if (createdExamId !== undefined) {
+          const queryCheck = `SELECT * FROM examtypes WHERE type = $1`;
+          const valuesCheck = [type];
+          const result = await pool.query(queryCheck, valuesCheck);
+
+          if (result.rows.length === 0) {
+            // Exam type does not exist, insert it
+            const queryInsert = `INSERT INTO examtypes (examid, type) VALUES ($1, $2) ON CONFLICT DO NOTHING`;
+            const valuesInsert = [createdExamId, type];
+            await pool.query(queryInsert, valuesInsert);
+            console.log("Exam created successfully.");
+          } else {
+            // Exam type already exists
+            console.log("Exam type already exists. Not inserting.");
+          }
+        } else {
+          console.error("Exam creation failed.");
+        }
+      } catch (error) {
+        // Handle any errors that may occur during the query
+        console.error("Error inserting/exam checking:", error);
       }
     } catch (error) {
       // Handle any errors that may occur during the first query (exam insertion)

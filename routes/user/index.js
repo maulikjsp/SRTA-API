@@ -15,6 +15,7 @@ const deleteUser = require("./delete-user");
 const deletePermission = require("./delete-permission");
 const getUserPermissions = require("./get-user-permissions");
 const { tokenVerification } = require("../../middleware");
+const { initiateReset, verifyToken, resetPassword } = require("../controllers/authController");
 
 // Routes
 router.get("/get-permissions", tokenVerification, getPermissions);
@@ -29,6 +30,9 @@ router.put("/update-user/:userId", tokenVerification, updateUser);
 router.put("/update-permission/:permissionId", tokenVerification, updatePermission);
 router.put("/update-role/:roleId", tokenVerification, updateRole);
 router.get("/get-user-permissions/:email", tokenVerification, getUserPermissions);
+router.post("/forgot-password", initiateReset);
+router.get("/reset/:token", verifyToken);
+router.post("/reset/:token", resetPassword);
 
 router.delete("/delete-exam/:examcode", tokenVerification, deleteExam);
 router.delete("/delete-permission/:permissionId", tokenVerification, deletePermission);

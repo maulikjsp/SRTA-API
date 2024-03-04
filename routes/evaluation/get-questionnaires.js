@@ -8,8 +8,10 @@ const getQuestionairesByProcedureId = async (req, res) => {
       SELECT 
       "questionnaires"."procedure_id",
       "questionnaires"."id" as "questionnaires_id",
-      "questionnaires"."section_id"
+      "questionnaires"."section_id",
+      "procedures"."title" AS "procedure"
       FROM questionnaires
+      INNER JOIN procedures on "procedures"."id" = "questionnaires"."procedure_id"
       WHERE procedure_id = $1
       `,
       [id]
@@ -35,6 +37,7 @@ const getQuestionairesByProcedureId = async (req, res) => {
         questionnaires_title: queryData[i]?.queationnaires_title, // Corrected typo
         criteria: criteriaQuery.rows,
         questionnaires_id: queryData[i]?.questionnaires_id,
+        procedure: queryData[i]?.procedure,
       });
     }
     if (questionnaires.length === 0) {

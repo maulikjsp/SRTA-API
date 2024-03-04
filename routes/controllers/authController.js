@@ -59,7 +59,7 @@ exports.initiateReset = async (req, res) => {
       to: updatedUser.email,
       from: process.env.ADMIN_EMAIL,
       subject: "Password Reset",
-      html: `<!DOCTYPE html> <!-- ... your HTML template ... -->`,
+      html: `<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Password Reset</title> <style> body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; } .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 5px; margin-top: 20px; } h2 { color: #333333; } p { color: #555555; } a { color: #007BFF; text-decoration: none; } .footer { margin-top: 20px; text-align: center; color: #999999; } </style> </head> <body> <div class="container"> <h2>Password Reset</h2> <p>Hello,</p> <p>We received a request to reset the password associated with this email address. If you made this request, please click the link below to reset your password:</p> <p><a href="${process.env.PROD_URL}/reset/${resetToken}" target="_blank">Reset Your Password</a></p> <p>If you didn't make this request, you can ignore this email, and your password will remain unchanged.</p> <p>Thank you!</p> <div class="footer"> <p>This is an automated email. Please do not reply.</p> </div> </div> </body> </html>`,
     };
 
     transporter.sendMail(mailOptions, (err) => {

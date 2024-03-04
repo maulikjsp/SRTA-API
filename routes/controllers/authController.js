@@ -9,27 +9,44 @@ const { pool } = require("../../config/db");
 exports.initiateReset = async (req, res) => {
   const { email } = req.body;
 
-  // Generate reset token and save it to the user
-  const resetToken = crypto.randomBytes(20).toString("hex");
-  const now = new Date();
-  now.setHours(now.getHours() + 1); // Token valid for 1 hour
-
-  const query = `
-    UPDATE users
-    SET reset_token = $1, reset_token_expires = $2
-    WHERE email = $3
-    RETURNING *;
+  // Check if the user with the specified email exists
+  const checkUserQuery = `
+    SELECT *
+    FROM users
+    WHERE email = $1;
   `;
 
-  const values = [resetToken, now, email];
+  const checkUserValues = [email];
 
   try {
-    const result = await pool.query(query, values);
-    const user = result.rows[0];
+    const userResult = await pool.query(checkUserQuery, checkUserValues);
+    const user = userResult.rows[0];
+
+    if (!user) {
+      // If user does not exist, return an appropriate response
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Generate reset token and save it to the user
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    const now = new Date();
+    now.setHours(now.getHours() + 1); // Token valid for 1 hour
+
+    // Update user with the reset token and expiration
+    const updateQuery = `
+      UPDATE users
+      SET reset_token = $1, reset_token_expires = $2
+      WHERE email = $3
+      RETURNING *;
+    `;
+
+    const updateValues = [resetToken, now, email];
+
+    const result = await pool.query(updateQuery, updateValues);
+    const updatedUser = result.rows[0];
 
     // Send email with reset link
     const transporter = nodemailer.createTransport({
-      // configure your email provider here
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,
       auth: {
@@ -39,10 +56,10 @@ exports.initiateReset = async (req, res) => {
     });
 
     const mailOptions = {
-      to: user.email,
+      to: updatedUser.email,
       from: process.env.ADMIN_EMAIL,
       subject: "Password Reset",
-      html: `<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Password Reset</title> <style> body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; } .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 5px; margin-top: 20px; } h2 { color: #333333; } p { color: #555555; } a { color: #007BFF; text-decoration: none; } .footer { margin-top: 20px; text-align: center; color: #999999; } </style> </head> <body> <div class="container"> <h2>Password Reset</h2> <p>Hello,</p> <p>We received a request to reset the password associated with this email address. If you made this request, please click the link below to reset your password:</p> <p><a href="${process.env.PROD_URL}/reset/${resetToken}" target="_blank">Reset Your Password</a></p> <p>If you didn't make this request, you can ignore this email, and your password will remain unchanged.</p> <p>Thank you!</p> <div class="footer"> <p>This is an automated email. Please do not reply.</p> </div> </div> </body> </html>`,
+      html: `<!DOCTYPE html> <!-- ... your HTML template ... -->`,
     };
 
     transporter.sendMail(mailOptions, (err) => {

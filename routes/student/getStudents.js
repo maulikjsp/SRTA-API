@@ -15,7 +15,8 @@ const getStudents = async (req, res) => {
     "students"."graduation_date",
     "students"."surname",
     "students"."social",
-    "students"."id"
+    "students"."id",
+    "students"."uuid"
   FROM students
   INNER JOIN exams ON "students"."exam_id" = "exams"."id"
   WHERE active = true

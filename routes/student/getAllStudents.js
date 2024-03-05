@@ -5,6 +5,7 @@ const getAllStudents = async (req, res) => {
     const studentsQuery = await pool.query(`
     select 
     "students"."id",
+    "students"."uuid",
     "students"."name",
     "students"."email",
     "exams"."examcode",

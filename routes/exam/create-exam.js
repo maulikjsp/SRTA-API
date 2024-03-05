@@ -205,9 +205,12 @@ const createExam = async (req, res) => {
 
         // If the student does not exist, perform the insertion
         const insertStudentQuery = `
-          INSERT INTO students(sequence_number, ext_student_id, exam_id, name, surname, email, address, phone, social, school, graduation_date, created_at, updated_at, is_present, is_terminated, reason)
+          INSERT INTO students(sequence_number, ext_student_id, exam_id, name, surname, email, address, phone, social, school, graduation_date, created_at, updated_at, is_present, is_terminated, reason, uuid)
           VALUES
-          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`;
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`;
+        const uuid = await pool.query("SELECT generate_user_id('STD') as uuid");
+        const UUID = uuid?.rows[0];
+        console.log(uuid?.rows[0], "uuid");
         const insertStudentValues = [
           ExamStudents[i]?.CandidateExamSeqNum,
           extStudentId,
@@ -225,6 +228,7 @@ const createExam = async (req, res) => {
           null,
           null,
           "",
+          UUID?.uuid,
         ];
 
         try {

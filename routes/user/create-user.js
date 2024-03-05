@@ -35,6 +35,8 @@ const createUser = async (req, res) => {
     }
 
     const roleQuery = await pool.query("SELECT role_id FROM roles WHERE role_name = $1", [role]);
+    const uuid = await pool.query("SELECT generate_user_id($1) as uuid", [role.toUpperCase()]);
+    const UUID = uuid?.rows[0];
 
     if (roleQuery.rows.length === 0) {
       return res.status(400).json({ message: "Invalid role" });
@@ -45,8 +47,8 @@ const createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await pool.query(
-      "INSERT INTO users (role_id, name, email, username, phone, password) VALUES ($1, $2, $3, $4, $5, $6)",
-      [roleId, `${firstname} ${lastname}`, email, username, phone, hashedPassword]
+      "INSERT INTO users (role_id, name, email, username, phone, password, uuid) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+      [roleId, `${firstname} ${lastname}`, email, username, phone, hashedPassword, UUID?.uuid]
     );
 
     res.setHeader("Access-Control-Allow-Origin", "*");

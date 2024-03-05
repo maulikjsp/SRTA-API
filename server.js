@@ -188,7 +188,7 @@ app.post("/api/login", async (req, res) => {
 app.get("/api/get-users", tokenVerification, async (req, res) => {
   try {
     const userQuery = await pool.query(
-      "SELECT u.id, u.name, u.username, u.email, u.phone, r.role_name, u.role_id FROM users u INNER JOIN roles r ON u.role_id = r.role_id"
+      "SELECT u.uuid, u.id, u.name, u.username, u.email, u.phone, r.role_name, u.role_id FROM users u INNER JOIN roles r ON u.role_id = r.role_id"
     );
     // Get the role name based on the role_id from the "roles" table
     const users = userQuery.rows;

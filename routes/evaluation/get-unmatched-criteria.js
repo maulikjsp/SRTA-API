@@ -21,15 +21,7 @@ JOIN users u ON es.examiner_id  = u.id
 WHERE
     es.procedure_id = $1
     AND es.student_id = $2
-    AND NOT EXISTS (
-        SELECT 1
-        FROM exam_submission es2
-        WHERE es2.procedure_id = $1
-          AND es2.student_id = $2
-          AND es2.criteria_id = es.criteria_id
-          AND es2.criteria_ans = es.criteria_ans
-          AND es2.id <> es.id
-    );`,
+    AND es.criteria_ans = false;`,
       [procedure_id, student_id]
     );
     return res.status(201).json({

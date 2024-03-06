@@ -132,7 +132,7 @@ app.post("/api/register", async (req, res) => {
 });
 
 app.post("/api/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, loginInfo } = req.body;
 
   try {
     // Find the user by email in the "users" table
@@ -169,6 +169,10 @@ app.post("/api/login", async (req, res) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     console.log("user logged in ");
+    await pool.query("INSERT INTO logs (log_time, user_id, user_info) VALUES (NOW(), $1, $2)", [
+      user?.id,
+      loginInfo,
+    ]);
     return res.status(200).json({
       message: "Login successful",
       accessToken: token,

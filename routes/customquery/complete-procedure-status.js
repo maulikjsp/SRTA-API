@@ -44,12 +44,9 @@ const completeExamProcedureStatus = async (req, res) => {
       statuses.filter((status) => status === "completed").length === statuses.length;
 
     const escalated =
-      statuses.length === 1
-        ? checkExamProcedureCount.rows.length > 1
-          ? true
-          : false
-        : statuses.filter((status) => status === "pending").length === 1;
-
+      statuses.length === questionnairesCriteria.length
+        ? statuses.filter((status) => status === "pending").length > 0
+        : false;
     const updateStatusQuery = `
         UPDATE exam_procedure_status
         SET status = $1, examiner_id = $2, escalated = $5

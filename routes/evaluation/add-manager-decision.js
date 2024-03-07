@@ -2,7 +2,7 @@ const { pool } = require("../../config/db");
 
 const submitMangerDecision = async (req, res) => {
   try {
-    const { manager_id, exam_procedure_id } = req.body;
+    const { manager_id, exam_procedure_id, data } = req.body;
 
     const queryMap = await Promise.all(
       data?.questionnaires?.map(async (item, index) => {

@@ -19,7 +19,9 @@ const getExamProcedureDetails = async (req, res) => {
   "exams"."active",
   "procedures"."title",
   "examiner_user"."name" AS "examiner_name",
+  "examiner_user"."uuid" AS "examiner_uuid",
   "manager_user"."name" AS "manager_name",
+  "manager_user"."uuid" AS "manager_uuid",
   "roles"."role_name",
   "students"."uuid",
   "manager_decision"."manager_decision"

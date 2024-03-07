@@ -11,8 +11,10 @@ const getExamProcedureDetails = async (req, res) => {
   "exam_procedure_status"."exam_id",
   "exam_procedure_status"."student_id",
   "exam_procedure_status"."status",
-  "procedure_submission"."examiner_id",
-  "procedure_submission"."questionnaires",
+  "exam_submission"."examiner_id",
+  "exam_submission"."criteria_id",
+  "exam_submission"."criteria_ans",
+  "exam_submission"."title" AS "criteria",
   "exams"."examcode",
   "exams"."active",
   "procedures"."title",
@@ -21,14 +23,15 @@ const getExamProcedureDetails = async (req, res) => {
   "students"."uuid",
   "manager_decision"."manager_decision"
 FROM "exam_procedure_status"
-INNER JOIN "manager_decision" ON "manager_decision"."exam_procedure_id" = "exam_procedure_status"."id"
 INNER JOIN "students" ON "students"."id" = "exam_procedure_status"."student_id"
-INNER JOIN "procedure_submission" ON "exam_procedure_status"."procedureid" = "procedure_submission"."procedure_id"
+LEFT JOIN "exam_submission" ON "exam_procedure_status"."procedureid" = "exam_submission"."procedure_id" AND "exam_submission"."student_id" = "exam_procedure_status"."student_id"
+LEFT JOIN "manager_decision" ON "manager_decision"."criteria_id" = "exam_submission"."criteria_id"
 INNER JOIN "exams" ON "exam_procedure_status"."exam_id" = "exams"."id"
 INNER JOIN "procedures" ON "exam_procedure_status"."procedureid" = "procedures"."id"
-INNER JOIN "users" ON "procedure_submission"."examiner_id" = "users"."id"
+INNER JOIN "users" ON "exam_submission"."examiner_id" = "users"."id"
 INNER JOIN "roles" ON "users"."role_id" = "roles"."role_id"
-WHERE "exam_procedure_status"."procedureid" = $1 AND "exam_procedure_status"."student_id" = $2 AND "procedure_submission"."student_id" = $2 AND "procedure_submission"."procedure_id" = $1
+WHERE "exam_procedure_status"."procedureid" = $1 AND "exam_procedure_status"."student_id" = $2 AND "exam_submission"."student_id" = $2 AND "exam_submission"."procedure_id" = $1;
+
       `,
       [procedure_id, student_id]
     );

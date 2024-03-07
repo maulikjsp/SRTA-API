@@ -18,7 +18,8 @@ const getExamProcedureDetails = async (req, res) => {
   "exams"."examcode",
   "exams"."active",
   "procedures"."title",
-  "users"."name" AS "examiner_name",
+  "examiner_user"."name" AS "examiner_name",
+  "manager_user"."name" AS "manager_name",
   "roles"."role_name",
   "students"."uuid",
   "manager_decision"."manager_decision"
@@ -28,9 +29,11 @@ LEFT JOIN "exam_submission" ON "exam_procedure_status"."procedureid" = "exam_sub
 LEFT JOIN "manager_decision" ON "manager_decision"."criteria_id" = "exam_submission"."criteria_id"
 INNER JOIN "exams" ON "exam_procedure_status"."exam_id" = "exams"."id"
 INNER JOIN "procedures" ON "exam_procedure_status"."procedureid" = "procedures"."id"
-INNER JOIN "users" ON "exam_submission"."examiner_id" = "users"."id"
-INNER JOIN "roles" ON "users"."role_id" = "roles"."role_id"
+INNER JOIN "users" AS "examiner_user" ON "exam_submission"."examiner_id" = "examiner_user"."id"
+INNER JOIN "users" AS "manager_user" ON "manager_decision"."manager_id" = "manager_user"."id"
+INNER JOIN "roles" ON "examiner_user"."role_id" = "roles"."role_id"
 WHERE "exam_procedure_status"."procedureid" = $1 AND "exam_procedure_status"."student_id" = $2 AND "exam_submission"."student_id" = $2 AND "exam_submission"."procedure_id" = $1;
+
 
       `,
       [procedure_id, student_id]

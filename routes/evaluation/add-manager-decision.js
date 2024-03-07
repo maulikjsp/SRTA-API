@@ -2,10 +2,10 @@ const { pool } = require("../../config/db");
 
 const submitMangerDecision = async (req, res) => {
   try {
-    const { manager_id, exam_procedure_id, data } = req.body;
+    const { manager_id, exam_procedure_id, questionnaires } = req.body;
 
     const queryMap = await Promise.all(
-      data?.questionnaires?.map(async (item, index) => {
+      questionnaires?.map(async (item, index) => {
         const result = await pool.query(
           `
         INSERT INTO manager_decision (
@@ -36,10 +36,7 @@ const submitMangerDecision = async (req, res) => {
       })
     );
 
-    if (
-      data?.questionnaires?.filter((item) => item?.ans === true).length ===
-      data?.questionnaires?.length
-    ) {
+    if (questionnaires?.filter((item) => item?.ans === true).length === questionnaires?.length) {
       const updateStatusQuery = `
       UPDATE exam_procedure_status
       SET status = $1, escalated = $3

@@ -17,8 +17,12 @@ const getExamProcedureDetails = async (req, res) => {
   "exams"."active",
   "procedures"."title",
   "users"."name" AS "examiner_name",
-  "roles"."role_name"
+  "roles"."role_name",
+  "students"."uuid",
+  "manager_decision"."manager_decision"
 FROM "exam_procedure_status"
+INNER JOIN "manager_decision" ON "manager_decision"."exam_procedure_id" = "exam_procedure_status"."id"
+INNER JOIN "students" ON "students"."id" = "exam_procedure_status"."student_id"
 INNER JOIN "procedure_submission" ON "exam_procedure_status"."procedureid" = "procedure_submission"."procedure_id"
 INNER JOIN "exams" ON "exam_procedure_status"."exam_id" = "exams"."id"
 INNER JOIN "procedures" ON "exam_procedure_status"."procedureid" = "procedures"."id"

@@ -15,9 +15,11 @@ const getExamProcedureStatus = async (req, res) => {
     "exam_procedure_status"."examiner_id",
     "exam_procedure_status"."exam_id",
     "exam_procedure_status"."status",
-    "exams"."examname"
+    "exams"."examname",
+    "students"."uuid"
 FROM  
     exam_procedure_status
+INNER JOIN "students" ON "students"."id" = "exam_procedure_status"."student_id"
 INNER JOIN 
     "procedures" ON "procedures"."id" = "exam_procedure_status"."procedureid"
 INNER JOIN 

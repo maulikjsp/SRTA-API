@@ -2,8 +2,7 @@ const { pool } = require("../../config/db");
 
 const getCallBoardStatus = async (req, res) => {
   try {
-    const callBoardQuery = await pool.query(`
-       SELECT
+    const callBoardQuery = await pool.query(`SELECT
     s.id::INT AS id,
     s.name::VARCHAR(255) AS name,
     s.uuid::VARCHAR AS student_uuid,
@@ -15,7 +14,7 @@ const getCallBoardStatus = async (req, res) => {
         END
     )::VARCHAR(255), 'Not Started') AS exam_status,
     JSONB_AGG(
-        JSONB_BUILD_OBJECT(
+        DISTINCT JSONB_BUILD_OBJECT(
             'name', COALESCE(u.name, 'Unknown'), 
             'status', CASE
                 WHEN ps.student_id IS NOT NULL THEN 'Completed'::VARCHAR(255)
@@ -41,8 +40,7 @@ WHERE
     AND (u.role_id = 2 OR ps.student_id IS NOT NULL)
 GROUP BY
     s.id, s.name, s.uuid;
-
-       `);
+`);
     return res.status(201).json({
       data: callBoardQuery.rows,
     });

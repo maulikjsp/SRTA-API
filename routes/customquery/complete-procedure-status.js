@@ -45,7 +45,7 @@ const completeExamProcedureStatus = async (req, res) => {
 
     const escalated =
       statuses.length === questionnairesCriteria.length
-        ? statuses.filter((status) => status === "pending").length > 0
+        ? statuses.filter((status) => status === "pending").length > 2
         : false;
     const updateStatusQuery = `
         UPDATE exam_procedure_status

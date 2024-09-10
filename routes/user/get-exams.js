@@ -11,7 +11,7 @@ const getExams = async (req, res) => {
       ]);
       const examSectionQuery = await pool.query(
         `
-        select 
+        select DISTINCT
        "sections"."title",
        "sections"."id",
        "groups"."title" as Group

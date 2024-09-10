@@ -2,7 +2,7 @@ const { pool } = require("../../config/db");
 
 const completeExamProcedureStatus = async (req, res) => {
   try {
-    const { procedure_id, student_id, examiner_id, questionnaires_id, questionnaires, exam_id } =
+    const { procedure_id, student_id, examiner_id, questionnaires_id, questionnaires, exam_id,uuid} =
       req.body;
     const questionnairesCriteria = JSON.parse(questionnaires);
 
@@ -45,7 +45,7 @@ const completeExamProcedureStatus = async (req, res) => {
 
     const escalated =
       statuses.length === questionnairesCriteria.length
-        ? statuses.filter((status) => status === "pending").length > 2
+        ? statuses.filter((status) => status === "pending").length > 0
         : false;
     const updateStatusQuery = `
         UPDATE exam_procedure_status
